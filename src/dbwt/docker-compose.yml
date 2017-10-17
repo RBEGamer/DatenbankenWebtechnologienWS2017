@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  dbwt:
+    image: dbwt
+    build:
+      context: ./dbwt
+      dockerfile: Dockerfile
