@@ -1,0 +1,11 @@
+version: 1.0
+os: linux
+hooks:
+  BeforeInstall:
+    - location: src/build_docker_image.sh
+      timeout: 300
+      runas: root
+  ApplicationStop:
+    - location: src/stop_docker_container.sh
+      timeout: 300
+      runas: root
