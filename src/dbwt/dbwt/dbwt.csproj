@@ -14,4 +14,7 @@
     <Content Remove="Views\Home\About.cshtml" />
     <Content Remove="Views\Home\Contact.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="Views\Shared\Shared\_Layout.cshtml" />
+  </ItemGroup>
 </Project>

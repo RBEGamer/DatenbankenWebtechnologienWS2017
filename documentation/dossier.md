@@ -34,7 +34,7 @@ Also habe ich zusaetzlich zu HeidiSQL, SequelPro (http://sequelpro.com) installi
 * HeidiSQL - GPL
 
 #### Web Development IDE
-Hier liste ich einige IDEs die ich bereits verwende. Dabei finde ich die Produktpalette von JetBrains sehr gelungen. Bootstrapstudio ist zwar keine direkte IDE für Webentwicklung, aber sie macht den Umgang und das erstellen von Templates mit Bootstrap sehr einfach. Als Standart-Editor ist der Atom Editor (https://atom.io) sehr zu empfehlen.
+Hier liste ich einige IDEs die ich bereits verwende. Dabei finde ich die Produktpalette von JetBrains sehr gelungen. Bootstrapstudio ist zwar keine direkte IDE für Webentwicklung, aber sie macht den Umgang und das erstellen von Templates mit Bootstrap sehr einfach.
 
 * JetBrains WebStorm - https://jetbrains.com/webstorm
 * Adobe Dreamweaver CS6 -  http://adobe.com/de/products/dreamweaver.html
