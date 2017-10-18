@@ -14,27 +14,8 @@ namespace dbwt
     {
         public Startup(IConfiguration configuration)
         {
+           
             Configuration = configuration;
-
-
-            MySqlConnectionStringBuilder conn_string = new MySqlConnectionStringBuilder();
-            conn_string.Server = "127.0.0.1";
-            conn_string.UserID = "root";
-            conn_string.Password = "root";
-            conn_string.Database = "dbwt_praktikum";
-            conn_string.Port = 32768;
-
-            using (MySqlConnection conn = new MySqlConnection(conn_string.ToString()))
-            using (MySqlCommand cmd = conn.CreateCommand())
-            {    //watch out for this SQL injection vulnerability below
-                 // cmd.CommandText = string.Format("INSERT Test (lat, long) VALUES ({0},{1})",
-                 //                            OSGconv.deciLat, OSGconv.deciLon);
-                conn.Open();
-                cmd.ExecuteNonQuery();
-            }
-
-
-
 
         }
 

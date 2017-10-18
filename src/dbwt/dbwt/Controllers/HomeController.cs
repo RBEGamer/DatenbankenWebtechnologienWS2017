@@ -10,24 +10,24 @@ namespace dbwt.Controllers
 {
     public class HomeController : Controller
     {
+        DB_KV_ACCESS t = new DB_KV_ACCESS();
+       
         public IActionResult Index()
         {
+            
+
+            ViewData["data"] = t.ToString();
+          
             return View();
         }
 
-        public IActionResult About()
-        {
-            ViewData["Message"] = "Your application description page.";
+    
 
-            return View();
-        }
-
-        public IActionResult Contact()
-        {
-            ViewData["Message"] = "Your contact page.";
-
-            return View();
-        }
+      //  public IActionResult Contact()
+      //  {
+      //      ViewData["Message"] = "Your contact page."
+      //      return View();
+       // }
 
         public IActionResult Error()
         {
