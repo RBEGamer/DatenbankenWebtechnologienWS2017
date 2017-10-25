@@ -1,9 +1,76 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Mensa Order System | Home";
 }
 
-<center>
-    <h1>INDEX TEST DB</h1><br><br>
-    <h2>@ViewData["data"]</h2>
 
-    </center>
+<script language="javascript" type="text/javascript">
+var container = $(".FormResponder");
+var refreshComponent = function () {
+    $.get("/FormResponder/GetTable", function (data) { 
+    document.getElementById("form_responder_element").innerHTML = data;
+   // container.html(data);
+    });
+};
+$(function () { window.setInterval(refreshComponent, 1000); });
+
+function read_form(){
+ var _v =    document.getElementById("value").value;
+ var  _k = document.getElementById("key").value;
+if(_v == "" || _k == ""){
+    alert("Please fill in all fields");
+    return;
+        }
+  
+$.get( "/FormResponder/Write", { key: _k, value: _v }, function( data ) {
+    if(data =='ok'){
+    refreshComponent();
+    document.getElementById("key").value = "";
+     document.getElementById("value").value = "";
+    }else{
+    alert(data);
+    }
+}, "html"); 
+    }
+
+</script> 
+
+
+     <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>HOME </h1></div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                   <div class="FormResponder" id="form_responder_element"> </div>
+                </div>
+
+        
+                <div class="col-md-4">
+                    <fieldset>
+                        <legend>WRITE TO DATABASE</legend>
+                        <div class="form-group">
+                        <label class="col-md-4 control-label" for="textinput">KEY</label>  
+                        <div class="col-md-4">
+                         <input id="key" name="key" type="text" placeholder="a value" class="form-control input-md" required>
+                        <span class="help-block">put in a key value</span>  
+                        </div>
+                        </div>
+                        <div class="form-group">
+                        <label class="col-md-4 control-label" for="value">VALUE</label>  
+                        <div class="col-md-4">
+                        <input id="value" name="value" type="text" placeholder="a value" class="form-control input-md" required>
+                        <span class="help-block">insert a value</span>  
+                        </div>
+                        </div>
+                        <div class="form-group">
+                        <label class="col-md-4 control-label" for="submit">SEND</label>
+                        <div class="col-md-4">
+                        <button id="send" onclick="read_form()" name="send" class="btn info">Send shit to the dark side</button>
+                        </div>
+                        </div>
+                    </fieldset>
+                </div>
+                <div class="col-md-4"></div>
+            </div>
+        </div>

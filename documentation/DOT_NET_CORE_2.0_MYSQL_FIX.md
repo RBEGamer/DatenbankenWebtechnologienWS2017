@@ -1,5 +1,5 @@
 # .NET_CORE 2.0.0 + MYSQL FIX
-In the current stable .net core version is a bugfix under linux systems.
+In the current stable .net core version is a bugfix under linux/mac osx systems.
 So you have added the nuget packages manually:
 
 ## FIRST PLEASE INSERT IN YOU PROJECT.CSPROJ
