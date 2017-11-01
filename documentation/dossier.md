@@ -1,4 +1,4 @@
-# Dossier - Ochsendorf Marcel
+# Dossier - Ochsendorf Marcel | 3120232
 
 * DWBT WS1718
 * http://github.com/RBEGamer/dwbt_praktikum_ws1718
@@ -32,7 +32,7 @@ Also habe ich zusaetzlich zu HeidiSQL, SequelPro (http://sequelpro.com) installi
 ### QUESTIONS M0
 
 #### Lizenzen
-* VS17 - EULA (Endbenutzer-Lizenzvereinbarung) | nicht offen
+* VS17 - Licence Terms | nicht offen
 * MariaDB - GPL (General Public License ) | offen, bearbeiten, kopieren, rechte beibehalten
 * SequelPro - MIT (SPDX) | ohne limitierung
 * HeidiSQL - GPL

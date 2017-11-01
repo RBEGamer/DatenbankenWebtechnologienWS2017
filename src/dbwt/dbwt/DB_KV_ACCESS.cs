@@ -55,7 +55,7 @@ namespace dbwt
         {
             values = new List<KV_PAIR>();
 
-            conn_string.Server = "127.0.0.1";
+            conn_string.Server = "18.194.182.2";
             conn_string.UserID = "root";
             conn_string.Password = "root";
             conn_string.Database = "dbwt_praktikum";

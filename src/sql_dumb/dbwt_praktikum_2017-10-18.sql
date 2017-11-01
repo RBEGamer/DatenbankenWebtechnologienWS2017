@@ -37,10 +37,10 @@ LOCK TABLES `test_db` WRITE;
 
 INSERT INTO `test_db` (`id`, `value`, `key`)
 VALUES
-	(1,'TEST0\n','213'),
-	(2,'TEST\n','NULL123'),
+	(1,'TEST0','213'),
+	(2,'TEST','NULL123'),
 	(3,'efefef','NULL3213123131'),
-	(4,'bla\n','dada'),
+	(4,'bla','dada'),
 	(5,'nope','durum');
 
 /*!40000 ALTER TABLE `test_db` ENABLE KEYS */;

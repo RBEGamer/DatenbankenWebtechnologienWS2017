@@ -3,74 +3,60 @@
 }
 
 
-<script language="javascript" type="text/javascript">
-var container = $(".FormResponder");
-var refreshComponent = function () {
-    $.get("/FormResponder/GetTable", function (data) { 
-    document.getElementById("form_responder_element").innerHTML = data;
-   // container.html(data);
-    });
-};
-$(function () { window.setInterval(refreshComponent, 1000); });
 
-function read_form(){
- var _v =    document.getElementById("value").value;
- var  _k = document.getElementById("key").value;
-if(_v == "" || _k == ""){
-    alert("Please fill in all fields");
-    return;
-        }
-  
-$.get( "/FormResponder/Write", { key: _k, value: _v }, function( data ) {
-    if(data =='ok'){
-    refreshComponent();
-    document.getElementById("key").value = "";
-     document.getElementById("value").value = "";
-    }else{
-    alert(data);
-    }
-}, "html"); 
-    }
-
-</script> 
-
-
-     <div class="container">
+    <div id="foodporn">
+        <div class="container" style="height:160px;">
             <div class="row">
-                <div class="col-md-12">
-                    <h1>HOME </h1></div>
-            </div>
-            <div class="row">
-                <div class="col-md-4">
-                   <div class="FormResponder" id="form_responder_element"> </div>
-                </div>
-
-        
-                <div class="col-md-4">
-                    <fieldset>
-                        <legend>WRITE TO DATABASE</legend>
-                        <div class="form-group">
-                        <label class="col-md-4 control-label" for="textinput">KEY</label>  
-                        <div class="col-md-4">
-                         <input id="key" name="key" type="text" placeholder="a value" class="form-control input-md" required>
-                        <span class="help-block">put in a key value</span>  
-                        </div>
-                        </div>
-                        <div class="form-group">
-                        <label class="col-md-4 control-label" for="value">VALUE</label>  
-                        <div class="col-md-4">
-                        <input id="value" name="value" type="text" placeholder="a value" class="form-control input-md" required>
-                        <span class="help-block">insert a value</span>  
-                        </div>
-                        </div>
-                        <div class="form-group">
-                        <label class="col-md-4 control-label" for="submit">SEND</label>
-                        <div class="col-md-4">
-                        <button id="send" onclick="read_form()" name="send" class="btn info">Send shit to the dark side</button>
-                        </div>
-                        </div>
-                    </fieldset>
-                </div>
-                <div class="col-md-4"></div>
+                <div class="col-md-12" style="height:206;margin:5px;padding:-35px;"><img class="img-responsive" src="~/images/generic_food_bg.png" alt="our generic mensa food"></div>
             </div>
         </div>
+    </div>
+
+    <div style="height:183px;" id="gerichte">
+        <div class="container" style="height:0;">
+            <div class="row" style="height:162px;">
+                <div class="col-md-2">
+                    <p>Der Dienst e-Mensa ist noch beta. Sie können bereits <a href="#" >Mahlzeiten</a> durchstöbern, aber noch nicht bestellen</p>
+                </div>
+                <div class="col-md-8" style="height:84px;margin:0;">
+                    <div>
+                      <h1>Leckere Gerichte vorbstellen</h1>
+                      <p>... und gemeinsam mit Kommilitonen und Freunden essen</p>
+                    </div>
+                </div>
+                <div class="col-md-2 col-md-offset-0" style="padding:20px 0px;width:160px;">
+                    <div style="height:51px;">
+                        <button class="btn btn_fh_color" type="button" style="margin:0;width:140px;">
+                          <span class="glyphicon glyphicon-star"></span> Register
+                        </button>
+                    </div>
+                    <div style="height:51px;">
+                        <button class="btn btn_fh_color" type="button" style="margin:0;width:140px;">
+                          <span class="glyphicon glyphicon-star"></span> Login
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div style="height:183px;" id="register">
+        <div class="container" style="height:0;">
+            <div class="row" style="height:162px;">
+                <div class="col-md-2">
+                    <p>Registrieren Sie sich <a href="#">hier</a>, um über die Veröffentlichung des Dienstes per Mail informiert zu werden.</p>
+                </div>
+                <div class="col-md-10" style="height:84px;margin:0;">
+                    <img class="img-responsive" src="~/images/generic_food_bg.png" alt="our generic mensa food">
+                </div>
+                <div class="col-md-2 col-md-offset-0" style="padding:20px 0px;width:160px;">
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+

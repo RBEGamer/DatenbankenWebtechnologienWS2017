@@ -6,6 +6,7 @@
   <ItemGroup>
     <Content Remove="Views\Home\About.cshtml" />
     <Content Remove="Views\Home\Contact.cshtml" />
+    <Content Remove="wwwroot\images\generic_food_bg.png" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Views\Shared\Shared\_Layout.cshtml" />
@@ -21,8 +22,12 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\FormResponder\" />
+    <Folder Include="Views\Produkte\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Controllers\FormResponder.cshtml.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="wwwroot\images\generic_food_bg.png" />
   </ItemGroup>
 </Project>
