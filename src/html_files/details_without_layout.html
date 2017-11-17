@@ -1,0 +1,109 @@
+        <div class="container">
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center">Details für "Falafel"</h1>
+                    </div>
+                </div>
+            
+                
+                <div class="row">
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form>
+                                        <fieldset>
+                                            <legend>Login </legend>
+                                            <input class="form-control" type="text" name="username" required="" placeholder="Benutzer">
+                                            <input class="form-control" type="password" name="password" required="" placeholder="password">
+                                            <input class="btn btn-link link_button" type="submit" value="Anmelden" />
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <img src="assets/img/generic_food_bg.png" />
+                        </div>
+                        <div class="col-md-2">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5 class="text-right">Gast-Preis </h5>
+                                    <h5 class="text-right">5.95 €</h5></div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <button class="btn" type="submit">
+                                            <img src="./assets/images/glyphicons_free/glyphicons/png/glyphicons-276-fast-food.png"/> Vorbestellen 
+
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col-md-2"><span>Melden Sie sich jetzen an um wirklich günstigeren Preis für Mitarbeiter und Studenten zu sehen</span></div>
+                    
+                    <div class="col-md-8">
+                        <div>
+                                    <!-- TAB START-->
+                                            <div class="tabbable-panel">
+                                                <div class="tabbable-line">
+                                                    <ul class="nav nav-tabs ">
+                                                        <li class="active">
+                                                            <a href="#tab_beschreibung" data-toggle="tab">Beschreibung</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#tab_zutaten" data-toggle="tab">Zutaten</a>
+                                                        </li>
+                                                        <li>
+                                                            <a href="#tab_bewertung" data-toggle="tab">Bewertungen</a>
+                                                        </li>
+                                                    </ul>
+                                                    <div class="tab-content">
+                                                        <div class="tab-pane active" id="tab_beschreibung">
+                                                            Teigtschae mit Falafel aus Kichererbsen und Sesam, dazu passt hervorragend der
+                                                            <a href="detail.html?id=Krautsalat">Krautsalat</a>
+                                                        </div>
+                                                        <div class="tab-pane" id="tab_zutaten">
+                                                           ZUTAT_1, ZUTAT_2, ZUTAT_3
+                                                        </div>
+                                                        <!--FORM BEWERTUNG START-->
+                                                        <div class="tab-pane" id="tab_bewertung">
+                                                            <form method="POST" action="http://bc5.m2c-lab.fh-aachen.de:8080/data.php">
+                                                            <fieldset>
+                                                                    <legend>Bewertung </legend>
+
+                                                                    <input type="hidden" name="matrikelnummer" id="matrikelnummer" value="31230232" />
+                                                                    <input type="hidden" name="kontrolle" id="kontrolle" value="och" />
+
+                                                                    <table class="table">
+                                                                              <tr>
+                                                                                <td><label for="benutzer">Benutzername</label></td>
+                                                                                <td><input type="text" id="benutzer" name="benutzer" placeholder="benutzer" /></td>
+                                                                              </tr>
+                                                                              <tr>                                                                               
+                                                                                <td><label for="bemerkung">Bemerkung</label></td>
+                                                                                <td><input type="textarea" id="bemerkung" name="bemerkung" placeholder="bemerkung" /></td>                                                                            
+                                                                              </tr>
+                                                                              <tr>                               
+                                                                                    <td><label for="bewertung">Bewerung</label></td>
+                                                                                    <td><input type="range" min="1" max="5" step="1" value="3" name="bewertung" id="bewertung" /></td>                                                                           
+                                                                                  </tr>
+                                                                                  <tr>     
+                                                                                        <td></td>
+                                                                                        <td><input type="submit" value="SENDEN" action=""/></td>
+                                                                                      </tr>
+                                                                            </tbody>
+                                                                          </table>
+                                                                </fieldset>
+                                                            </form> 
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- TAB END-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

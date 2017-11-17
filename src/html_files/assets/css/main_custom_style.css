@@ -1,0 +1,40 @@
+a {
+    color: #00b5ad;
+    text-decoration: underline;
+}
+
+.footer-basic .fh_link {
+    color: #00b5ad;
+}
+
+.navbar .navbar-collapse .fh_link {
+    color: #00b5ad;
+}
+
+
+.btn_fh_color {
+  color: #FFFFFF;
+  background-color: #00B5AD;
+  border-color: #130269;
+}
+
+
+.copyright {
+    color: #AAAAAA;
+    border-color: #130269;
+  }
+
+.img-size{
+    display: block;
+    width: 100%;
+    height: auto;
+}
+
+
+.product_sold_out_text{
+    color: #AAAAAA;
+}
+  
+.link_button{
+    text-decoration: underline;
+}

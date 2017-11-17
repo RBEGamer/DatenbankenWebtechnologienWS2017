@@ -1,0 +1,260 @@
+<html lang="de">
+        <head>
+            <meta charset="utf-8">
+            <!-- turn of caching -->
+            <meta http-equiv="cache-control" content="max-age=0" />
+            <meta http-equiv="cache-control" content="no-cache" />
+            <meta http-equiv="expires" content="0" />
+            <meta http-equiv="expires" content="Tue, 01 Jan 1980 1:00:00 GMT" />
+            <meta http-equiv="pragma" content="no-cache" />
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>e- Mensa</title>
+
+            <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto"> -->
+            <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap.min.css">
+            <link rel="stylesheet" href="./assets/bootstrap/css/bootstrap-theme.min.css">
+            <link rel="stylesheet" href="./assets/css/ionicons.min.css">
+            <link rel="stylesheet" href="./assets/css/styles.min.css">
+            <script src="./assets/js/jquery.min.js"></script>
+            <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+            <script src="./assets/js/script.min.js"></script>
+            <link rel="stylesheet" href="./assets/css/Footer-Basic.css">
+            <link rel="stylesheet" href="./assets/css/main_custom_style.css">
+        </head>
+
+        <body>
+
+
+                <header>
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-md-2">
+                                    <h2>e-Mensa </h2>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="row" style="margin:15px;">
+                                            <div class="col-md-1">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <a href="Start.html" class="fh_link">Start </a>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <a href="Produkte.html" class="fh_link">Mahlzeiten</a>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <a href="Bestellungen.html" class="fh_link">Bestellung </a>
+                                            </div>
+                                            <div class="col-md-3">
+                                                <a href="http://fh-aachen.de" class="fh_link">FH-Aachen</a>
+                                            </div>
+                                            <div class="col-md-1">
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4" >
+                                        <div style="margin:15px;">
+                                                <form action="http://google.de/search" method="get">
+                                                  <input type="search" name="q" placeholder="Search.." />
+                                                  <input type="hidden" name="as_sitesearch" value="www.fh-aachen.de" />
+                                                   <!--<input type="submit" value="search" class="btn btn-xs btn_fh_color"/>-->
+                                                </form>
+                                            </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr width="90%" size="10">
+                    </header>
+
+
+
+        <!-- MAIN BODY START-->
+
+
+        <div class="container">
+            <!-- HEADLINE-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center">Verfügbare Speisen (Bestseller)</h1></div>
+                </div>
+                <!-- FILTER FORM-->
+                <div class="row">
+                    <div class="col-md-3">
+                        <form method="GET" action="">
+                            <fieldset>
+                                <legend>Speisenfilter </legend>
+                            </fieldset>
+                            <ul>
+                                <li class="list-unstyled">
+                                    <div style="height: 40px;">
+                                        <select>
+                                            <option value="0" readonly>Wurst</option>
+                                            <option value="1">Döner</option>
+                                            <option value="2">Schinkenügel</option>
+                                            <option value="3">Salami</option>
+                                        </select>
+                                    <div>
+                                </li>
+                                <li class="list-unstyled">
+                                        <div>
+                                                <input type="checkbox" id="only_avariable" name="only_avariable" value="only_avariable">
+                                                <label for="only_avariable">nur Verfügbare</label>
+                                        </div>
+                                </li>
+                                <li class="list-unstyled">
+                                        <div>
+                                                <input type="checkbox" id="without_meat" name="without_meat" value="without_meat">
+                                                <label for="without_meat">nur Vegetarische</label>
+                                        </div>
+                                </li>
+                                <li class="list-unstyled">
+                                        <div>
+                                                <input type="checkbox" id="only_vegan" name="only_vegan" value="only_vegan">
+                                                <label for="only_avariable">nur Vegane</label>
+                                        </div>
+                                </li>
+
+                            </ul>
+                            <input class="btn btn-default" type="submit" value="Speisen filtern" onclick="filter()"/>
+                        </form>
+
+
+
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row" style="height:200px;">
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Curry</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="#">Details </a></div>
+                                </div>
+                            </div>
+
+                                    <!-- NORMAL PRODUCT-->
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Döner</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="products.html?prodi=12">Details </a></div>
+                                </div>
+                            </div>
+
+                        <!-- DISABLED PRODUCT-->
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default_gray.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 product_sold_out_text"><span>BRATROLLE</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 product_sold_out_text">VERGRIFFEN</div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Fleischrolle</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="#">Details </a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Reihe-->
+                        <div class="row" >
+                            <div class="col-md-2">
+                                <div class="row" >
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Fleischsalat</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="#">Details </a></div>
+                                </div>
+                            </div>
+                            <div class="col-md-2" >
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Wurstsalat</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="#">Details </a></div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Brot-Wurst</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="#">Details </a></div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Text</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="#">Details </a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        <!-- MAIN BODY END-->
+                <footer>
+                        <hr width="90%" size="10">
+                        <div class="container">
+                                <div class="row">
+                                        <div class="col-md-3" >
+                                                <p class="copyright">Marcel Ochsendorf © 2017</p>
+                                            </div>
+                                        <div class="col-md-6" >
+                                                <div class="container text-center">
+                                                        <ul class="list-inline">
+                                                            <li class="list-inline-item"><a href="#" class="fh_link">Login </a></li>
+                                                            <li class="list-inline-item"> | </li>
+                                                            <li class="list-inline-item"><a href="#" class="fh_link">Register </a></li>
+                                                            <li class="list-inline-item"> | </li>
+                                                            <li class="list-inline-item"><a href="#" class="fh_link">Zutatenliste </a></li>
+                                                            <li class="list-inline-item"> | </li>
+                                                            <li class="list-inline-item"><a href="Impressum.html" class="fh_link">Impressum </a></li>
+                                                            <li class="list-inline-item"></li>
+                                                        </ul>
+                                                </div>
+                                        </div>
+                                        <div class="col-md-3" >
+                                                <div class="social"><a href="https://github.com/RBEGamer"><i class="icon ion-social-github"></i></a></div>
+                                            </div>
+                                    </div>
+                                </div>
+                </footer>
+
+        </body>
+
+        </html>
