@@ -8,8 +8,10 @@ using dbwt.Models;
 
 namespace dbwt.Controllers
 {
-    public class Produkte : Controller
+    public class ImpressumController : Controller
     {
+       
+       
         public IActionResult Index()
         {
             return View();

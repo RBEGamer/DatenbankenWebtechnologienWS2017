@@ -1,133 +1,174 @@
-﻿@{
-    ViewData["Title"] = "Products";
+﻿@using System.Configuration
+@using Microsoft.AspNetCore.Http
+@{
+    ViewData["Title"] = "Mensa Order System | Produkte";
 }
+
 <div class="container">
-        <div class="row">
-            <div class="col-md-12">
-                <h1 class="text-center">Verfügbare Speisen</h1></div>
-        </div>
-        <div class="row">
-            <div class="col-md-2">
-                <form>
-                    <fieldset>
-                        <legend>Speisenfilter </legend>
-                    </fieldset>
-                    <div class="dropdown">
-                        <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false" type="button">Dropdown <span class="caret"></span></button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li role="presentation"><a href="#">First Item</a></li>
-                            <li role="presentation"><a href="#">Second Item</a></li>
-                            <li role="presentation"><a href="#">Third Item</a></li>
-                        </ul>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox">Label</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox">Label</label>
-                    </div>
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox">Label</label>
-                    </div>
-                </form>
-                <button class="btn btn-default" type="button">Button</button>
-            </div>
-            <div class="col-md-10">
-                <div class="row" style="height:200px;">
-                    <div class="col-md-2" style="">
-                        <div class="row">
-                            <div class="col-md-12"><img class="img-responsive" src="~/images/speise_icons/default.png" width="100px" height="100px"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><span>Text</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><a href="#">Details </a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row">
-                            <div><img class="img-responsive" src="~/images/speise_icons/default.png" width="100px" height="100px"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><span>Text</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><a href="#">Details </a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row">
-                            <div class="col-md-12"><img class="img-responsive" src="~/images/speise_icons/default.png" width="100px" height="100px"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><span>Text</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><a href="#">Details </a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row">
-                            <div class="col-md-12"><img class="img-responsive" src="~/images/speise_icons/default.png" width="100px" height="100px"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><span>Text</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><a href="#">Details </a></div>
-                        </div>
-                    </div>
+            <!-- HEADLINE-->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h1 class="text-center">Verfügbare Speisen (Bestseller)</h1></div>
                 </div>
-                <div class="row" >
-                    <div class="col-md-2">
+                <!-- FILTER FORM-->
+                <div class="row">
+                    <div class="col-md-3">
+                        <form method="GET" action="Produkte">
+                            <fieldset>
+                                <legend>Speisenfilter </legend>
+                            </fieldset>
+                            <ul>
+                                <li class="list-unstyled">
+                                    <div style="height: 40px;">
+                                       @{
+
+                                        <select name='kategorie'>
+                                 List<DB_ACCESS.DB_KAT> lcat = DB_ACCESS.Instance.read_kategorien();
+                               
+                                    for (int i = 0; i < lcat.lenght(); i++) {
+                                         <option value="@lcat[i].Bezeichnung"> Döner </option>
+                                    }
+                                            
+                              
+                                        
+                                       
+                                        </select>
+
+                            
+                                        }  
+                                    <div>
+                                </li>
+                                <li class="list-unstyled">
+                                        <div>
+                                                <input type="checkbox" id="only_avariable" name="only_avariable" value="only_avariable">
+                                                <label for="only_avariable">nur Verfügbare</label>
+                                        </div>         
+                                </li>
+                                <li class="list-unstyled">
+                                        <div>
+                                                <input type="checkbox" id="without_meat" name="without_meat" value="without_meat">
+                                                <label for="without_meat">nur Vegetarische</label>
+                                        </div>         
+                                </li>
+                                <li class="list-unstyled">
+                                        <div>
+                                                <input type="checkbox" id="only_vegan" name="only_vegan" value="only_vegan">
+                                                <label for="only_avariable">nur Vegane</label>
+                                        </div>         
+                                </li>
+
+                            </ul>
+                            <input class="btn btn-default" type="submit" value="Speisen filtern" onclick="filter()"/>
+                        </form>
+                        
+
+
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row" style="height:200px;">
+                
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Curry</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="Details?id=11">Details </a></div>
+                                </div>
+                            </div>
+
+                                    <!-- NORMAL PRODUCT-->
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Döner</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="Details?id=12">Details </a></div>
+                                </div>
+                            </div>
+
+                        <!-- DISABLED PRODUCT-->
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default_gray.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 product_sold_out_text"><span>BRATROLLE</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12 product_sold_out_text">VERGRIFFEN</div>
+                                </div>
+                            </div>
+
+
+
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Fleischrolle</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="Details?id=13">Details </a></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 2. Reihe-->
+
+   
                         <div class="row" >
-                            <div class="col-md-12"><img class="img-responsive" src="~/images/speise_icons/default.png" width="100px" height="100px"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><span>Text</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><a href="#">Details </a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-2" >
-                        <div class="row">
-                            <div class="col-md-12"><img class="img-responsive" src="~/images/speise_icons/default.png" width="100px" height="100px"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><span>Text</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><a href="#">Details </a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row">
-                            <div class="col-md-12"><img class="img-responsive" src="~/images/speise_icons/default.png" width="100px" height="100px"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><span>Text</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><a href="#">Details </a></div>
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="row">
-                            <div class="col-md-12"><img class="img-responsive" src="~/images/speise_icons/default.png" width="100px" height="100px"></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><span>Text</span></div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12"><a href="#">Details </a></div>
+                            <div class="col-md-2">
+                                <div class="row" >
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Fleischsalat</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="Details?id=14">Details </a></div>
+                                </div>
+                            </div>
+                            <div class="col-md-2" >
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Wurstsalat</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="Details?id=15">Details </a></div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Brot-Wurst</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="Details?id=16">Details </a></div>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="row">
+                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><span>Text</span></div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12"><a href="Details?id=17">Details </a></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>

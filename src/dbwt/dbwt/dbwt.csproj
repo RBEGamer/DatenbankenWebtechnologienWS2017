@@ -23,6 +23,8 @@
   <ItemGroup>
     <Folder Include="Views\FormResponder\" />
     <Folder Include="Views\Produkte\" />
+    <Folder Include="Views\Impressum\" />
+    <Folder Include="Views\Details\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Controllers\FormResponder.cshtml.cs" />
