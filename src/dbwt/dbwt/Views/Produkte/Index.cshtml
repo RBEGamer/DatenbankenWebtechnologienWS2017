@@ -6,214 +6,221 @@
 }
 
 <div class="container">
-            <!-- HEADLINE-->
-                <div class="row">
-                    <div class="col-md-12">
-                        <h1 class="text-center">Verfügbare Speisen ( @ViewData["KategorieName"] )</h1></div>
-                </div>
-                <!-- FILTER FORM-->
-                <div class="row">
-                    <div class="col-md-3">
-                        <form method="GET" action="Produkte">
-                            <fieldset>
-                                <legend>Speisenfilter </legend>
-                            </fieldset>
-                            <ul>
-                                <li class="list-unstyled">
-                                    <div style="height: 40px;">
+    <!-- HEADLINE-->
+    <div class="row">
+        <div class="col-md-12">
+            <h1 class="text-center">Verfügbare Speisen ( @ViewData["KategorieName"] )</h1>
+        </div>
+    </div>
+    <!-- FILTER FORM-->
+    <div class="row">
+        <div class="col-md-3">
+            <form method="GET" action="Produkte">
+                <fieldset>
+                    <legend>Speisenfilter </legend>
+                </fieldset>
+                <ul>
+                    <li class="list-unstyled">
+                        <div style="height: 40px;">
 
-                                        <select name="kategorie">
+                            <select name="kategorie">
 
-                                            @{
-                                                // Verbindung zum DBMS
-                                                MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
+                                @{
+                                    // Verbindung zum DBMS
+                                    MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
+                                    try
+                                    {
+                                        con.Open();
+                                        MySqlCommand cmd;
+                                        cmd = con.CreateCommand();
+                                        cmd.CommandText = "SELECT * FROM `Kategorie` WHERE `Oberkategorie` IS NULL";
+                                        MySqlDataReader r = cmd.ExecuteReader();
+                                        List<KAT_DESC> under_categories = new List<KAT_DESC>();
 
-
-                                                try
-                                                {
-                                                    con.Open();
-                                                    MySqlCommand cmd;
-                                                    cmd = con.CreateCommand();
-                                                    cmd.CommandText = "SELECT * FROM `Kategorie` WHERE `Oberkategorie` IS NULL";
-                                                    MySqlDataReader r = cmd.ExecuteReader();
-                                                    List<KAT_DESC> under_categories = new List<KAT_DESC>();
-
-                                                        @Html.Raw("<optgroup label='Hauptkategorie'>");
-                                                    while (r.Read())
-                                                    {
-                                                        KAT_DESC tmp = new KAT_DESC();
-                                                        tmp.id = (int)r["Id"];
-                                                        tmp.name = (String)r["Bezeichnung"];
-                                                        under_categories.Add(tmp);
-                                                        <option value="@r["Id"]"> @r["Bezeichnung"] </option>
-                                                        }
-                                                    @Html.Raw("</optgroup>");
-                                                    //TODO ELSE CATEGORIES
-                                                    con.Close();
-                                                    foreach (KAT_DESC n in under_categories)
-                                                    {
-                                                        con.Open();
-                                                        MySqlCommand cmd1;
-                                                        cmd1 = con.CreateCommand();
-                                                        cmd1.CommandText = "SELECT * FROM `Kategorie` WHERE `Oberkategorie`='" + n.id.ToString() + "'";
-                                                        MySqlDataReader rkat = cmd1.ExecuteReader();
-                                                        List<KAT_DESC> ucat = new List<KAT_DESC>();
-                                                        while (rkat.Read())
-                                                        {
-                                                            ucat.Add(new KAT_DESC((String)rkat["Bezeichnung"], (int)rkat["Id"]));
-                                                        }
-                                                        con.Close();
-                                                        if (ucat.Count() <= 0) { continue; }
-                                                        @Html.Raw("<optgroup label='" + n.name + "'>");
-                                                        foreach (KAT_DESC m in ucat)
-                                                        {
-                                                            <option value="@m.id"> @m.name </option>
-                                                        }
-                                                        @Html.Raw("</optgroup>");
-                                                    }
+ //                                       @Html.Raw("<optgroup label='Hauptkategorie'>");
+                                        while (r.Read())
+                                        {
+                                            KAT_DESC tmp = new KAT_DESC();
+                                            tmp.id = (int)r["Id"];
+                                            tmp.name = (String)r["Bezeichnung"];
+                                            under_categories.Add(tmp);
+                                          //  <option value="@r["Id"]"> @r["Bezeichnung"] </option>
+                                        }
+   //                                     @Html.Raw("</optgroup>");
+                                        //TODO ELSE CATEGORIES
+                                        con.Close();
+                                        foreach (KAT_DESC n in under_categories)
+                                        {
+                                            con.Open();
+                                            MySqlCommand cmd1;
+                                            cmd1 = con.CreateCommand();
+                                            cmd1.CommandText = "SELECT * FROM `Kategorie` WHERE `Oberkategorie`='" + n.id.ToString() + "'";
+                                            MySqlDataReader rkat = cmd1.ExecuteReader();
+                                            List<KAT_DESC> ucat = new List<KAT_DESC>();
+                                            while (rkat.Read())
+                                            {
+                                                ucat.Add(new KAT_DESC((String)rkat["Bezeichnung"], (int)rkat["Id"]));
+                                            }
+                                            con.Close();
+                                            if (ucat.Count() <= 0) { continue; }
+                                            @Html.Raw("<optgroup label='" + n.name + "'>");
+                                            foreach (KAT_DESC m in ucat)
+                                            {
+                                                <option value="@m.id"> @m.name </option>
+                                            }
+                                            @Html.Raw("</optgroup>");
+                                        }
 
 
-                                                }
-                                                catch (Exception e)
-                                                {
-                                                        <p class="error">Das hat nicht geklappt.</p>
+                                    }
+                                    catch (Exception e)
+                                    {
+                                        <p class="error">Das hat nicht geklappt.</p>
                                                         <pre>@e.Message</pre>
-                                                }
-                                                        }
-                                            </select>
-                                        <div>
-                                            </li>
-                                            <li class="list-unstyled">
-                                                <div>
-                                                    <input type="checkbox" id="only_avariable" name="only_avariable" value="only_avariable">
-                                                    <label for="only_avariable">nur Verfügbare</label>
-                                                </div>
-                                            </li>
-                                            <li class="list-unstyled">
-                                                <div>
-                                                    <input type="checkbox" id="without_meat" name="without_meat" value="without_meat">
-                                                    <label for="without_meat">nur Vegetarische</label>
-                                                </div>
-                                            </li>
-                                            <li class="list-unstyled">
-                                                <div>
-                                                    <input type="checkbox" id="only_vegan" name="only_vegan" value="only_vegan">
-                                                    <label for="only_avariable">nur Vegane</label>
-                                                </div>
-                                            </li>
-
-                                    </ul>
-                            <input class="btn btn-default" type="submit" value="Speisen filtern" onclick="filter()"/>
-                        </form>
-                        
-
-
-                    </div>
-                    <div class="col-md-9">
-                        <div class="row" style="height:200px;">
-                
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><span>Curry</span></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><a href="Details?id=11">Details </a></div>
-                                </div>
-                            </div>
-
-                                    <!-- NORMAL PRODUCT-->
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <div><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><span>Döner</span></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><a href="Details?id=12">Details </a></div>
-                                </div>
-                            </div>
-
-                        <!-- DISABLED PRODUCT-->
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default_gray.png" width="100px" height="100px"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 product_sold_out_text"><span>BRATROLLE</span></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12 product_sold_out_text">VERGRIFFEN</div>
-                                </div>
-                            </div>
-
-
-
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><span>Fleischrolle</span></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><a href="Details?id=13">Details </a></div>
-                                </div>
-                            </div>
+                                    }
+                                }
+                            </select>
+                            <div>
+                    </li>
+                    <li class="list-unstyled">
+                        <div>
+                            <input type="checkbox" id="only_avariable" name="only_avariable" value="only_avariable">
+                            <label for="only_avariable">nur Verfügbare</label>
                         </div>
-
-                        <!-- 2. Reihe-->
-
-   
-                        <div class="row" >
-                            <div class="col-md-2">
-                                <div class="row" >
-                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><span>Fleischsalat</span></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><a href="Details?id=14">Details </a></div>
-                                </div>
-                            </div>
-                            <div class="col-md-2" >
-                                <div class="row">
-                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><span>Wurstsalat</span></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><a href="Details?id=15">Details </a></div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><span>Brot-Wurst</span></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><a href="Details?id=16">Details </a></div>
-                                </div>
-                            </div>
-                            <div class="col-md-2">
-                                <div class="row">
-                                    <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/default.png" width="100px" height="100px"></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><span>Text</span></div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12"><a href="Details?id=17">Details </a></div>
-                                </div>
-                            </div>
+                    </li>
+                    <li class="list-unstyled">
+                        <div>
+                            <input type="checkbox" id="without_meat" name="without_meat" value="without_meat">
+                            <label for="without_meat">nur Vegetarische</label>
                         </div>
-                    </div>
-                </div>
-            </div>
+                    </li>
+                    <li class="list-unstyled">
+                        <div>
+                            <input type="checkbox" id="only_vegan" name="only_vegan" value="only_vegan">
+                            <label for="only_avariable">nur Vegane</label>
+                        </div>
+                    </li>
+
+                </ul>
+                <input class="btn btn-default" type="submit" value="Speisen filtern" onclick="filter()" />
+            </form>
+
+
+
+        </div>
+        <div class="col-md-9">
+
+
+
+            @{
+                //SELECT * FROM `Produkt` LEFT JOIN `Bild` ON `Produkt`.`FK_bild` = `Bild`.`Id` WHERE 1
+                MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
+
+                try
+                {
+                    con1.Open();
+                    MySqlCommand cmd;
+                    cmd = con1.CreateCommand();
+                    String cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Bild` ON `Produkt`.`FK_bild` = `Bild`.`Id` WHERE 1";
+                    if (ViewData["KategorieId"] != null)
+                    {
+                        cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Bild` ON `Produkt`.`FK_bild` = `Bild`.`Id` WHERE `FK_Kategorie`='"+ ViewData["KategorieId"] + "'";
+                    }
+
+                    if(ViewData["limit"] != null)
+                    {
+                        cmdb += " LIMIT " + ViewData["limit"];
+                    }
+                    cmd.CommandText = cmdb;
+                    MySqlDataReader r = cmd.ExecuteReader();
+                    List<PROD_DESC> products = new List<PROD_DESC>();
+                    while (r.Read())
+                    {
+                        PROD_DESC tmp = new PROD_DESC();
+                        tmp.Id = (int)r["Id"];
+                        tmp.Beschreibung = (String)r["Beschreibung"];
+                        tmp.Ausverkauft = (bool)r["Ausverkauft"];
+                        tmp.AltText = (String)r["Alt-Text"];
+                        tmp.BildPfad = (String)r["BildPfad"];
+                        tmp.BildPfadGray = (String)r["BildPfadGray"];
+                        products.Add(tmp);
+                    }
+                    con1.Close();
+                    const int items_per_row = 4;
+                    int rows = (int)(products.Count() / items_per_row);
+
+
+                    @Html.Raw("<div class=\"row\" style=\"height: 200px; \">");
+                    int rc = 0;
+                    for (int i = 0; i < products.Count(); i++)
+                    {
+
+                        String vg_text = "-- NO DATA --";
+                        String gclass = "";
+                        if (products[i].Ausverkauft)
+                        {
+                            <div class="col-md-2">
+                                <div class="speise-@products[i].Id">
+                                    <div class="row">
+                                        <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/@products[i].BildPfadGray" width="100px" height="100px"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 product_sold_out_text"><span> @products[i].Beschreibung </span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12 product_sold_out_text">VERGRIFFEN</div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-md-2">
+                                <div class="speise-@products[i].Id">
+                                    <div class="row">
+                                        <div><img class="img-responsive" src="./assets/images/speise_icons/@products[i].BildPfad" width="100px" height="100px"></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12"><span>@products[i].Beschreibung</span></div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12"><a href="Details?id=@products[i].Id">Details </a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+
+
+                        if (rc >= 3)
+                        {
+                            rc = 0;
+                            @Html.Raw("</div>");
+                            @Html.Raw("<div class=\"row\" style=\"height: 200px; \">");
+                        }
+                        rc++;
+
+
+
+                    }
+
+
+
+
+
+
+
+                }
+                catch (Exception e)
+                {
+                    <p class="error">Das hat nicht geklappt.</p>
+                                        <pre>@e.Message</pre>
+                }
+
+            }
+
+
+
+
+        </div>
+    </div>
+</div>

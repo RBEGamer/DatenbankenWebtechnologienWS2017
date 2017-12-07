@@ -31,7 +31,7 @@ namespace dbwt.Controllers
 
         //kategorie=2&only_avariable=only_avariable&without_meat=without_meat&only_vegan=only_vegan
         [HttpGet]
-        public IActionResult Index(String kategorie, String only_avariable,String without_meat, String only_vegan)
+        public IActionResult Index(String kategorie, String only_avariable,String without_meat, String only_vegan, String limit)
         {
             if (kategorie == "" || kategorie == null)
             {
@@ -40,25 +40,16 @@ namespace dbwt.Controllers
             else
             {
                 ViewData["KategorieName"] = DB_ACCESS.Instance.read_kategori_by_id(kategorie);
+                ViewData["KategorieId"] = kategorie;
             }
-            return View();
+
+            if (limit != null)
+            {
+                ViewData["limit"] = limit;
+            }
+                return View();
         }
 
-        public List<ProdukteDesc> get_products_desc(bool is_vegan, bool is_vegetarisch, bool is_bio){
-
-
-            List<ProdukteDesc> produkte = new List<ProdukteDesc>();
-
-
-
-
-           
-
-
-            //TODO LOAD PRODUCTS
-            //SORT THEM BY FILTER
-            return produkte;
-        }
 
 
 

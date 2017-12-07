@@ -29,6 +29,17 @@ namespace dbwt
         }
     }
 
+
+    public class PROD_DESC
+    {
+        public int Id;
+        public String Beschreibung;
+        public String BildPfad = "default.png";
+        public String BildPfadGray = "default_gray.png";
+        public String AltText;
+        public bool Ausverkauft;
+    }
+
     public class DB_ACCESS
     {
         private static DB_ACCESS instance;

@@ -35,10 +35,12 @@ namespace dbwt.Controllers
         public ActionResult Index(String id)
         {
             
-
-           
+            if(id != null)
+            {
+                ViewData["prodid"] = id;
+            }
             return View();
         }
-
+        
     }
 }
