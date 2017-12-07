@@ -1,6 +1,59 @@
-﻿@{
+﻿@using System.Configuration
+@using MySql.Data.MySqlClient
+@using Microsoft.AspNetCore.Mvc
+@{
     ViewData["Title"] = "Mensa Order System | Details";
-  
+
+
+    MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
+
+    try
+    {
+        con1.Open();
+        MySqlCommand cmd;
+        cmd = con1.CreateCommand();
+
+        if(ViewData["prodid"] == null) { return; }
+
+        String cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Preis` ON `Preis`.`Id` = `Produkt`.`FK_Preis` LEFT JOIN `Bild` ON `Bild`.`Id` = `Produkt`.`FK_Bild` WHERE `Produkt`.`Id`='" + ViewData["prodid"] +"' LIMIT 1";
+
+
+        cmd.CommandText = cmdb;
+        MySqlDataReader r = cmd.ExecuteReader();
+        List<PROD_DESC> products = new List<PROD_DESC>();
+        while (r.Read())
+        {
+            ViewData["Titel"] = (String)r["Titel"];
+            ViewData["Beschreibung"] = (String)r["Beschreibung"];
+
+
+
+            if (ViewData["role"] != null && (String)ViewData["role"] == "Student")
+            {
+                ViewData["preis"] = r["Studentenbetrag"];
+            }
+            else if (ViewData["role"] != null && (String)ViewData["role"] == "Mitarbeiter")
+            {
+                ViewData["preis"] = r["Mitarbeiterbetrag"];
+            }
+            else
+            {
+                ViewData["preis"] = r["Gastbetrag"];
+            }
+
+            ViewData["img_path"] = r["DetailsBildPfad"];
+
+        }
+        con1.Close();
+    }
+    catch (Exception e)
+    {
+        <p class="error">Das hat nicht geklappt.</p>
+                    <pre>@e.Message</pre>
+    }
+    
+
+
 
 }
 
@@ -8,7 +61,7 @@
 <div class="container">
                 <div class="row">
                     <div class="col-md-12">
-                        <h1 class="text-center">Details für "@ViewData["name"]"</h1>
+                        <h1 class="text-center">Details für "@ViewData["Titel"]"</h1>
                     </div>
                 </div>
             
@@ -29,7 +82,7 @@
                             </div>
                         </div>
                         <div class="col-md-8">
-                            <img src="assets/img/generic_food_bg.png" />
+                            <img class="img-responsive" src="./assets/images/speise_icons/@ViewData["img_path"]" width="700px" height="150px"/>
                         </div>
                         <div class="col-md-2">
                             <div class="row">
@@ -69,11 +122,11 @@
                                                     </ul>
                                                     <div class="tab-content">
                                                         <div class="tab-pane active" id="tab_beschreibung">
-                                                            @ViewData["beschreibung"]
+                                                            @ViewData["Beschreibung"]
                                                            <!-- <a href="detail.html?id=Krautsalat">Krautsalat</a>-->
                                                         </div>
                                                         <div class="tab-pane" id="tab_zutaten">
-                                                          @ViewData["zutaten"]
+                                                          @ViewData["Zutaten"]
                                                         </div>
                                                         <!--FORM BEWERTUNG START-->
                                                         <div class="tab-pane" id="tab_bewertung">

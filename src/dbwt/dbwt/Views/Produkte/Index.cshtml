@@ -138,11 +138,11 @@
                     {
                         PROD_DESC tmp = new PROD_DESC();
                         tmp.Id = (int)r["Id"];
-                        tmp.Beschreibung = (String)r["Beschreibung"];
+                        tmp.Beschreibung = (String)r["Titel"];
                         tmp.Ausverkauft = (bool)r["Ausverkauft"];
                         tmp.AltText = (String)r["Alt-Text"];
-                        tmp.BildPfad = (String)r["BildPfad"];
-                        tmp.BildPfadGray = (String)r["BildPfadGray"];
+                        tmp.BildPfad = (String)r["IconBildPfad"];
+                        tmp.BildPfadGray = (String)r["IconBildPfadGray"];
                         products.Add(tmp);
                     }
                     con1.Close();
@@ -162,7 +162,7 @@
                             <div class="col-md-2">
                                 <div class="speise-@products[i].Id">
                                     <div class="row">
-                                        <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/@products[i].BildPfadGray" width="100px" height="100px"></div>
+                                        <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/@products[i].BildPfadGray" width="100px" height="100px" alt="@products[i].AltText"></div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12 product_sold_out_text"><span> @products[i].Beschreibung </span></div>
