@@ -1,14 +1,15 @@
 ﻿@using System.Configuration
-@using Microsoft.AspNetCore.Http
+@using MySql.Data.MySqlClient
 @{
-    ViewData["Title"] = "Mensa Order System | Produkte";
+//ViewData["Title"] = "Mensa Order System | Produkte";
+
 }
 
 <div class="container">
             <!-- HEADLINE-->
                 <div class="row">
                     <div class="col-md-12">
-                        <h1 class="text-center">Verfügbare Speisen (Bestseller)</h1></div>
+                        <h1 class="text-center">Verfügbare Speisen ( @ViewData["KategorieName"] )</h1></div>
                 </div>
                 <!-- FILTER FORM-->
                 <div class="row">
@@ -20,44 +21,88 @@
                             <ul>
                                 <li class="list-unstyled">
                                     <div style="height: 40px;">
-                                       @{
 
-                                        <select name='kategorie'>
-                                 List<DB_ACCESS.DB_KAT> lcat = DB_ACCESS.Instance.read_kategorien();
-                               
-                                    for (int i = 0; i < lcat.lenght(); i++) {
-                                         <option value="@lcat[i].Bezeichnung"> Döner </option>
-                                    }
-                                            
-                              
-                                        
-                                       
-                                        </select>
+                                        <select name="kategorie">
 
-                            
-                                        }  
-                                    <div>
-                                </li>
-                                <li class="list-unstyled">
-                                        <div>
-                                                <input type="checkbox" id="only_avariable" name="only_avariable" value="only_avariable">
-                                                <label for="only_avariable">nur Verfügbare</label>
-                                        </div>         
-                                </li>
-                                <li class="list-unstyled">
-                                        <div>
-                                                <input type="checkbox" id="without_meat" name="without_meat" value="without_meat">
-                                                <label for="without_meat">nur Vegetarische</label>
-                                        </div>         
-                                </li>
-                                <li class="list-unstyled">
-                                        <div>
-                                                <input type="checkbox" id="only_vegan" name="only_vegan" value="only_vegan">
-                                                <label for="only_avariable">nur Vegane</label>
-                                        </div>         
-                                </li>
+                                            @{
+                                                // Verbindung zum DBMS
+                                                MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
 
-                            </ul>
+
+                                                try
+                                                {
+                                                    con.Open();
+                                                    MySqlCommand cmd;
+                                                    cmd = con.CreateCommand();
+                                                    cmd.CommandText = "SELECT * FROM `Kategorie` WHERE `Oberkategorie` IS NULL";
+                                                    MySqlDataReader r = cmd.ExecuteReader();
+                                                    List<KAT_DESC> under_categories = new List<KAT_DESC>();
+
+                                                        @Html.Raw("<optgroup label='Hauptkategorie'>");
+                                                    while (r.Read())
+                                                    {
+                                                        KAT_DESC tmp = new KAT_DESC();
+                                                        tmp.id = (int)r["Id"];
+                                                        tmp.name = (String)r["Bezeichnung"];
+                                                        under_categories.Add(tmp);
+                                                        <option value="@r["Id"]"> @r["Bezeichnung"] </option>
+                                                        }
+                                                    @Html.Raw("</optgroup>");
+                                                    //TODO ELSE CATEGORIES
+                                                    con.Close();
+                                                    foreach (KAT_DESC n in under_categories)
+                                                    {
+                                                        con.Open();
+                                                        MySqlCommand cmd1;
+                                                        cmd1 = con.CreateCommand();
+                                                        cmd1.CommandText = "SELECT * FROM `Kategorie` WHERE `Oberkategorie`='" + n.id.ToString() + "'";
+                                                        MySqlDataReader rkat = cmd1.ExecuteReader();
+                                                        List<KAT_DESC> ucat = new List<KAT_DESC>();
+                                                        while (rkat.Read())
+                                                        {
+                                                            ucat.Add(new KAT_DESC((String)rkat["Bezeichnung"], (int)rkat["Id"]));
+                                                        }
+                                                        con.Close();
+                                                        if (ucat.Count() <= 0) { continue; }
+                                                        @Html.Raw("<optgroup label='" + n.name + "'>");
+                                                        foreach (KAT_DESC m in ucat)
+                                                        {
+                                                            <option value="@m.id"> @m.name </option>
+                                                        }
+                                                        @Html.Raw("</optgroup>");
+                                                    }
+
+
+                                                }
+                                                catch (Exception e)
+                                                {
+                                                        <p class="error">Das hat nicht geklappt.</p>
+                                                        <pre>@e.Message</pre>
+                                                }
+                                                        }
+                                            </select>
+                                        <div>
+                                            </li>
+                                            <li class="list-unstyled">
+                                                <div>
+                                                    <input type="checkbox" id="only_avariable" name="only_avariable" value="only_avariable">
+                                                    <label for="only_avariable">nur Verfügbare</label>
+                                                </div>
+                                            </li>
+                                            <li class="list-unstyled">
+                                                <div>
+                                                    <input type="checkbox" id="without_meat" name="without_meat" value="without_meat">
+                                                    <label for="without_meat">nur Vegetarische</label>
+                                                </div>
+                                            </li>
+                                            <li class="list-unstyled">
+                                                <div>
+                                                    <input type="checkbox" id="only_vegan" name="only_vegan" value="only_vegan">
+                                                    <label for="only_avariable">nur Vegane</label>
+                                                </div>
+                                            </li>
+
+                                    </ul>
                             <input class="btn btn-default" type="submit" value="Speisen filtern" onclick="filter()"/>
                         </form>
                         

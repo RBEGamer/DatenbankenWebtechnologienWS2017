@@ -13,7 +13,21 @@ namespace dbwt
 {
 
 
+    public class KAT_DESC
+    {
+        public String name;
+        public int id;
 
+       public KAT_DESC(String _n, int _id)
+        {
+            name = _n;
+            id = _id;
+        }
+        public KAT_DESC()
+        {
+
+        }
+    }
 
     public class DB_ACCESS
     {
@@ -90,24 +104,50 @@ namespace dbwt
         }
 
 
-/*
-        public void write_db_date(KV_PAIR _kv){
+        public String read_kategori_by_id(String _id)
+        {
+            String name = "";
+            DB_KAT kats = new DB_KAT();
+            kats.Oberkategorie = "Hauptkategorie";
             using (MySqlConnection conn = new MySqlConnection(conn_string.ToString()))
             {
-                conn.Open();   
-                MySqlCommand cmd = new MySqlCommand("INSERT INTO `test_db` (`key`, `value`) VALUES ('" + _kv.key + "','"+ _kv.value + "')", conn);
-                cmd.ExecuteNonQuery();
+                conn.Open();
+                MySqlCommand cmd = new MySqlCommand("SELECT * FROM `Kategorie` WHERE `Id`='"+ _id  +"'", conn);
+                using (MySqlDataReader reader = cmd.ExecuteReader())
+                {
+
+                    while (reader.Read())
+                    {
+
+                        name = (String)reader["Bezeichnung"];
+                 
+                    }
+                }
                 conn.Close();
             }
+      
+            return name;
         }
-*/
-
-     
-
-       
 
 
-     
+        /*
+                public void write_db_date(KV_PAIR _kv){
+                    using (MySqlConnection conn = new MySqlConnection(conn_string.ToString()))
+                    {
+                        conn.Open();   
+                        MySqlCommand cmd = new MySqlCommand("INSERT INTO `test_db` (`key`, `value`) VALUES ('" + _kv.key + "','"+ _kv.value + "')", conn);
+                        cmd.ExecuteNonQuery();
+                        conn.Close();
+                    }
+                }
+        */
+
+
+
+
+
+
+
     }
 }
 

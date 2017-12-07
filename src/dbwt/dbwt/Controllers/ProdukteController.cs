@@ -22,21 +22,26 @@ namespace dbwt.Controllers
 
             //1st  alle produkte inkl kategorie in ein feld
             //SELECT COUNT(*) FROM `Produkt` WHERE 1
-            ViewData["title"] = "Verfügbare Speisen";
+            ViewData["Title"] = "e-Mensa | Verfügbare Speisen";
+            ViewData["KategorieName"] = "Bestseller";
            // ViewData["kategorie"] = gen_kategorie_cbx();
             return View();
 
         }
-        [HttpGet]
-        public IActionResult Index(String kategorie)
-        {
-            //1st  alle produkte inkl kategorie in ein feld
-            //SELECT COUNT(*) FROM `Produkt` WHERE 1
-            //ViewData["title"] = "Verfügbare Speise (n "+kategorie+")";
-            //ViewData["kategorie"] = gen_kategorie_cbx();
-           // ViewData["Title"] = "";
-            return View();
 
+        //kategorie=2&only_avariable=only_avariable&without_meat=without_meat&only_vegan=only_vegan
+        [HttpGet]
+        public IActionResult Index(String kategorie, String only_avariable,String without_meat, String only_vegan)
+        {
+            if (kategorie == "" || kategorie == null)
+            {
+                ViewData["KategorieName"] = "Bestseller";
+            }
+            else
+            {
+                ViewData["KategorieName"] = DB_ACCESS.Instance.read_kategori_by_id(kategorie);
+            }
+            return View();
         }
 
         public List<ProdukteDesc> get_products_desc(bool is_vegan, bool is_vegetarisch, bool is_bio){
@@ -56,22 +61,7 @@ namespace dbwt.Controllers
         }
 
 
-        public String gen_kategorie_cbx(){
 
-            //SELECT * FROM `Kategorie` WHERE `Oberkategorie` IS NULL
-            //<optgroup label='Hauptkategorie'>
-            //</optgroup>
-
-            List<DB_ACCESS.DB_KAT> lcat = DB_ACCESS.Instance.read_kategorien();
-           
-
-
-            String gen_cbx = "<select name='kategorie'>";
-            gen_cbx += "<option value='1'> Döner </option>";
-            gen_cbx += "</select";
-            //TODO
-            return gen_cbx;
-        }
 
     
         public IActionResult Error()
