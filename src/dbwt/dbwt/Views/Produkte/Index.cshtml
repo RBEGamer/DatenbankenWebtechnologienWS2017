@@ -1,7 +1,35 @@
 ﻿@using System.Configuration
 @using MySql.Data.MySqlClient
+@using Microsoft.AspNetCore.Mvc
+@using System.Web
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Razor;
+@using Microsoft.AspNetCore.Hosting;
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Session
+@using Microsoft.AspNetCore.Builder
 @{
-//ViewData["Title"] = "Mensa Order System | Produkte";
+    //ViewData["Title"] = "Mensa Order System | Produkte";
+
+
+    HttpContext cont = HttpContextNew.get_con();
+
+    if (String.IsNullOrEmpty(cont.Request.Query["kategorie"]) || cont.Request.Query["kategorie"] == "")
+    {
+        ViewData["KategorieName"] = "Bestseller";
+    }
+    else
+    {
+        ViewData["KategorieName"] = DB_ACCESS.Instance.read_kategori_by_id(cont.Request.Query["kategorie"].ToString());
+        ViewData["KategorieId"] = cont.Request.Query["kategorie"].ToString();
+    }
+
+    if (String.IsNullOrEmpty(cont.Request.Query["limit"].ToString()))
+    {
+        ViewData["limit"] = cont.Request.Query["limit"].ToString();
+    }
+
+    int tr = 5;
 
 }
 

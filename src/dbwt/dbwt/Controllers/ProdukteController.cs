@@ -19,7 +19,7 @@ namespace dbwt.Controllers
         public String set_kategorie = "";
         public IActionResult Index()
         {
-
+            HttpContextNew.set_con(HttpContext);
             //1st  alle produkte inkl kategorie in ein feld
             //SELECT COUNT(*) FROM `Produkt` WHERE 1
             ViewData["Title"] = "e-Mensa | Verfügbare Speisen";
@@ -33,20 +33,9 @@ namespace dbwt.Controllers
         [HttpGet]
         public IActionResult Index(String kategorie, String only_avariable,String without_meat, String only_vegan, String limit)
         {
-            if (kategorie == "" || kategorie == null)
-            {
-                ViewData["KategorieName"] = "Bestseller";
-            }
-            else
-            {
-                ViewData["KategorieName"] = DB_ACCESS.Instance.read_kategori_by_id(kategorie);
-                ViewData["KategorieId"] = kategorie;
-            }
+            HttpContextNew.set_con(HttpContext);
 
-            if (limit != null)
-            {
-                ViewData["limit"] = limit;
-            }
+            
                 return View();
         }
 

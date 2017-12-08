@@ -35,7 +35,7 @@ namespace dbwt.Controllers
         [HttpGet]
         public ActionResult Index(String id)
         {
-           
+           /*
             if (!String.IsNullOrEmpty(HttpContext.Session.Get<String>("role")) && (HttpContext.Session.Get<String>("role") == "Student" || HttpContext.Session.Get<String>("role") == "Gast" || HttpContext.Session.Get<String>("role") == "Mitarbeiter"))
             {       
                 ViewData["role"] = HttpContext.Session.Get<String>("role");
@@ -52,7 +52,7 @@ namespace dbwt.Controllers
             {
                 //TODO SET HEADER
             }
-
+            */
             HttpContextNew.set_con(HttpContext);
             return View();
         }
