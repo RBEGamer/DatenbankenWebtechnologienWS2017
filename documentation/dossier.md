@@ -122,7 +122,7 @@ Hier gibt es verschiene Ansätze, im Grunde ist die Beziehung zwischen FE-Nutzer
 Eine weiter möglichkeit wäre es passende zusätzliche `FK_Student`, `FK_Mitarbeiter`, `FK_Gast` Attribute zu erstellen und diese als optional deklarieren. So muss nur geschaut werden welche FK oprion nicht null ist.
 
 
-#### wie Sie die binären Relationstypen (1:N, N:M) abgebildet haben
+#### Wie Sie die binären Relationstypen (1:N, N:M) abgebildet haben
 
 Bei der `1:N` (es gibt einen Lehrer, welcher mehrere Klassen betreut). Diese Relation kann einfach durch ein `FK_LEHRER_ID` (-> zeigt auf die id des Lehrers) gelösst werden.
 
@@ -175,3 +175,121 @@ Ebenfall kann auf einen Enum eintrag auch per ID zugegriffen werden. Im Beispiel
 #### per CHECK Constraint auch in anderen DBMS nachbilden könnten•… was Sie tun mussten, um die Spezialisierung in der Datenbank abbilden zu können (welche INSERT Befehle, welche Reihenfolge)
 
 Um das `CHECK` Constraint nachzubilden, würde ich vorher überprüfen ob es die Spalte schon gibt, Dies kann über zuerst über einen `SELECT` Befehl geschehen. So könnte man alle abhängigen Tabellen zuerst überprüfen. Auch kann man die Reihenfolge der `INSERT` Befehle so ändern, dass zuerst du super tabelle befüllt werden. In unserem Beispiel muss die `FE-Nutzer` Tabelle zuerst befüllt werden bevor die `Gast/Student/Mitarbeiter` Tabelle befüllt werden kann, da diese auf die bereits existierende Elemente in der `FE-Nutzer` Tabelle zurückgreifen.
+
+
+
+
+
+### Sakila Datenbank SQL Abfragen - PAKET 3
+
+
+#### Wozu dienen die SQL Funktionen COALESCE, IFNULL und NULLIF?
+
+`Coalesce` wertet die übergebenen Argumente in Reihenfolge aus und gibt von den übergebenen Argumenten das erste von `Null` verschiedene Element zurück
+`IFNULL` ermöglicht es einen Ausdruck auszuwerten und festzulegen, welcher Wert an Stelle des Ausdrucks angegeben werden soll wenn dieser `NULL` ergibt.
+`NULLIF(Ausdruck1,Ausdruck2)` gibt es Wert NULL zurück wenn die beiden Ausdrücke gleich sind.
+
+
+#### Wozu dienen die Schlüsselwörter ALL und ANY bei Subqueries und wie kann man sie einsetzen?
+
+`ANY` und `ALL` dienen dazu in einer Unterabfrage eine Bedingung zu Formulieren welche Daten ausgewählt werden sollen indem man ein Element mit einer Liste von Elementen vergleicht. Bei `ALL` werden jene Resultate zurückgegeben bei denen das Element gleich jedem der einzelnen Listenelemente ist. Bei `ANY` werden jene Daten ausgewählt bei denen der Element mindestens gleich einem der Listenelemente ist.
+
+
+#### Welche Kunden (customer) haben Nachnamen, die mit A, B oder C beginnen? Geben Sie nur die Nachnamen aus.
+`select `last_name` from `customer` where `last_name like` 'a%' or `last_name` like 'b%' or `last_name` like 'c%'`
+
+
+#### 2 Welche Kunden (customer) sind als aktiv geführt (active)? Geben Sie die Vor- und Nachnamen der Kunden in einer Spalte zusammengefasst zurück. (In der Form: Vorname Nachname)
+`select concat(`first_name`, ' ', `last_name`) from `customer` where `active`='1'`
+
+
+#### 3 Welche Kunden (customer) haben die kürzeste E-Mail-Adresse (email)? Geben Sie die zehn kürzesten E-Mail-Adressen und die zugehörigen Kunden-IDs aus. Sortieren Sie aufsteigend nach der Länge der E-Mail-Adresse.
+`select `customer_id`,`email` from `customer` ORDER BY length(`email`) DESC LIMIT 10`
+
+
+#### 4 Geben Sie die Anzahl der Kunden (customer) pro Geschäft (gespeichert in store_id) aus. Das Ergebnis muss sowohl die Store-ID als auch die Anzahl der zu dieser ID gefundenen Kunden enthalten. Benennen Sie diese Spalte Anzahl der Kunden.
+`select count(`customer_id`) as `Anzahl Kunden`,store_id from `customer` group by `store_id``
+
+
+#### 5 Welche Kinderfilme (film) sind günstig ausleihbar? Nennen Sie die Film-ID, den Titel und die Leihkosten (rental_rate) aller Filme für unter $1 ausgeliehen werden können und das Rating G aufweisen. (Ignorieren Sie vorerst Rentals)
+select `film_id`,`title`,`rental_rate` from `film where rating` = 'G' and `rental_rate`<1.0
+
+
+#### 6 Führen Sie nun nur noch die Filme auf, die laut Inventar (inventory) in Store 1 vorliegen. Geben Sie zu jedem Film zusätzlich die Anzahl der im Inventar geführten Kopien aus.
+`select COUNT(`inventory_id`) as 'Anzahl Kopien' , `film_id`   from `inventory` where `store_id`='1' group by `film_id``
+
+
+#### 7 Listen Sie pro Store-ID und pro Rating die Anzahl der im Inventar geführten Kopien von Filmen auf. Das Ergebnis soll zuerst für Store 1 und dann für Store 2 die Ratings alphabetisch sortiert enthalten.
+`select `rating`,`store_id` ,count(`inventory_id`) from `film` join `inventory` on `film`.`film_id` = `inventory`.`film_id` group by `store_id`,`rating` order by `store_id` , `rating` asc`
+
+
+#### 8 Welche Filme sind in der Kategorie (category) Children aufgeführt, haben jedoch ein überhaupt nicht für Kinder geeignetes Rating? (Rating R oder NC-17). Stellen Sie den Bezug zwischen dem Namen Children und der Filme her. Geben Sie Film_id, Rating und Titel der Filme aus.
+`select `film`.`film_id`,`rating`,`title`  from `film` join `film_category` on `film`.`film_id` = `film_category`.`film_id` join `category` on `film_category`.`category_id` = `category`.`category_id` where `category`.`name` = 'Children' and `film`.`rating` in ('R','NC-17')`
+
+
+#### 9 Listen Sie Kundendaten ID, Vorname, Nachname und E-MailAdresse, Anschrift, PLZ und Stadt für alle Kunden aus Deutschland aus.
+`select `customer_id` , `first_name`, `last_name`, `email`, `address`.`address`, `district`, `postal_code`,`city`.`city`  from `customer` join `address` on `customer`.`address_id` = `address`.`address_id` join `city` on `address`.`city_id` = `city`.`city_id` where `city`.`country_id` = (select `country_id` from `country` where `country`.country` = 'Germany')`
+
+
+#### 10 Geben Sie die Anzahl der Kunden pro Land aus. Die Liste soll nur die Länder mit mindestens 30 Kunden enthalten und den Landesnamen und die Anzahl der Kunden absteigend sortiert enthalten.
+`select count(`customer_id`),`country`.`country`  from `customer` join `address` on `customer`.`address_id`=`address`.`address_id` join `city` on `address`.`city_id` = `city`.`city_id` join `country` on `city`.`country_id` = `country`.`country_id` group by `country`.`country` having count(`customer_id`)>=30`
+
+
+#### 11 Geben Sie die Summe der eingenommenen Ausleihgebühren (payment) pro Kunde pro Monat aus. Berücksichtigen Sie nur Zahlungen (amount) im ersten Halbjahr 2005 (payment_date). Geben Sie Vor- und Nachnamen der Kunden, den Namen des Monats und die Summe der Ausleihgebühren in diesem Monat aus. Die Monate sollen chronologisch korrekt gelistet und je Monat sollen die Summen abwärts sortiert werden. Tipp: Nutzen Sie MONTHNAME().
+`select `first_name`,`last_name`, monthname(`payment_date`),sum(`amount`) as 'Ausleihgebühren' from `payment`
+join `rental` on `payment`.`rental_id`=`rental`.`rental_id`
+join `customer` on `rental`.`customer_id` = `customer`.`customer_id`
+where month(`payment_date`)<='6' and year(`payment_date`)='2005'
+group by `first_name`,`last_name`,monthname(`payment_date`)
+order by month(`payment_date`) asc, Ausleihgebühren desc`
+
+
+#### 12 Geben Sie den umsatzstärksten Monat samt Summe (amount) aus. Der Monat soll wieder als Namen vorkommen, die Spalte soll Monat heißen. Die Spalte für die Summe soll Umsatz heißen.
+`select max(`Summe`) as 'Umsatz' ,`Monat` from(
+select sum(`amount`) as 'Summe', monthname(`rental_date`) as 'Monat' from `payment`
+join `rental` on `payment`.`rental_id`=`rental`.`rental_id`
+)`
+
+#### 13 Geben Sie den Umsatz je Kategorie aus je Store ID (inventory.store_id) zurück. Die Spalten sollen Kategorie, Store und Umsatz heißen.
+`select `name` as 'Kategorie',`store_id` as 'Store', sum(`amount`) as 'Umsatz' from `payment`
+join `rental` on `payment`.`rental_id` = `rental`.`rental_id`
+join `inventory` on `rental`.`inventory_id` = `inventory`.`inventory_id`
+join `film` on `inventory`.`film_id` = `film`.`film_id`
+join `film_category` on `film`.`film_id` = `film_category`.`film_id`
+join `category` on `film_category`.`category_id` = `category`.`category_id`
+group by `store_id`,`name``
+
+
+#### 14 Geben Sie alle Vorgesetzten (supervisor_id) für den Mitarbeiter (staff) mit der ID 6 (staff_id) aus. Es genügt, wenn Sie die Vor- und Nachnamen der Vorgesetzten in der richtigen Reihenfolge (von oberster Hierarchieebene bis herunter auf den Mitarbeiter selbst) zurückgeben. Tipp: Setzen Sie dies mittels CTE um (siehe [4]).
+`WITH RECURSIVE 'StaffAndSuperVisor' AS
+ ( SELECT `staff_id`,`first_name`,`last_name`,`supervisor_id` FROM `staff`
+   WHERE `staff_id`=6
+   UNION ALL
+   SELECT `f`.`staff_id`,`f`.`first_name`,`f`.`last_name`,`f`.`supervisor_id`
+   FROM `staff` AS 'f', 'StaffAndSuperVisor' AS 'a'
+   WHERE `f`.`staff_id` = `a`.`supervisor_id` )
+SELECT * FROM `StaffAndSuperVisor`;`
+
+#### 15. Lassen Sie sich die Detail-Informationen zu allen Spalten der Mitarbeiter-Tabelle anzeigen (staff). Zeigen Sie nur die Spalten ohne NOT NULL-Constraint an (Null).
+`SHOW COLUMNS FROM `staff` where `columns`.`null` = 'YES'`
+
+#### Erzeugen Sie für die Datenbank Praktikum aus Meilenstein 1 einen Benutzer:
+• Ein Nutzer namens webapp, mit dem Ihre Anwendung in Paket 4
+auf die Datenbank zugreifen wird. Das Kennwort vergeben Sie
+selbst. Der Nutzer webapp soll vollständige Rechte über die
+Datenbank erhalten (optional exklusive GRANT).
+
+• Notieren Sie die notwendigen SQL-Befehle für die Erstellung in
+jedem Fall in Ihrem Dossier. (Die Benutzerverwaltung in HeidiSQL
+erzeugt die erforderlichen SQL-Befehle für Sie – beachten Sie den
+Query Log).
+
+
+`CREATE USER 'webapp'@'localhost' IDENTIFIED BY 'webapp'';
+GRANT USAGE ON *.* TO 'webapp'@'127.0.0.1';
+GRANT SELECT, EXECUTE, SHOW VIEW, ALTER, ALTER ROUTINE, CREATE, CREATE ROUTINE, CREATE TEMPORARY TABLES, CREATE VIEW, DELETE, DROP, EVENT, INDEX, INSERT, REFERENCES, TRIGGER, UPDATE, LOCK TABLES  ON `dbwt_praktikum`.* TO 'webapp'@'127.0.0.1' WITH GRANT OPTION;
+FLUSH PRIVILEGES;``
+
+#### Dokumentieren Sie, was das GRANT Recht ermöglicht und ob Sie es für sinnvoll erachten. Stellen Sie auch sicher, dass der Nutzer webapp ausschließlich die Rechte auf der oben angesprochenen Datenbank besitzt!
+
+Grant erlaubt es dem Benutzer die Rechte anderer Nutzen der Datenbank zu ändern. Dies ist im vorliegenden Fall nicht sinnvoll, es wäre dann von Nutzen wenn man einen ‘Verwaltungsuser’ schaffen wollte dessen Aufgabe explizit die Verwaltung anderer User ist.
