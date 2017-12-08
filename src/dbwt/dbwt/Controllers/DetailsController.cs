@@ -22,6 +22,7 @@ namespace dbwt.Controllers
         //zutaten
         public IActionResult Index()
         {
+            HttpContextNew.set_con(HttpContext);
             return View();
         }
 
@@ -51,8 +52,8 @@ namespace dbwt.Controllers
             {
                 //TODO SET HEADER
             }
-           
-          
+
+            HttpContextNew.set_con(HttpContext);
             return View();
         }
         

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using MySql.Data.MySqlClient;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
 
 namespace dbwt
 {
@@ -24,18 +26,12 @@ namespace dbwt
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<Microsoft.AspNetCore.Http.IHttpContextAccessor, Microsoft.AspNetCore.Http.HttpContextAccessor>();
+            services.AddSession();
             services.AddMvc();
 
             // Adds a default in-memory implementation of IDistributedCache.
             services.AddDistributedMemoryCache();
-
-            services.AddSession(options =>
-            {
-                // Set a short timeout for easy testing.
-                options.IdleTimeout = TimeSpan.FromSeconds(10);
-                options.Cookie.HttpOnly = true;
-            });
-
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -51,6 +47,11 @@ namespace dbwt
                 app.UseExceptionHandler("/Home/Error");
             }
 
+           
+
+          //  System.Web.HttpContext.Configure(app.ApplicationServices.
+         //GetRequiredService<Microsoft.AspNetCore.Http.IHttpContextAccessor>()
+     //);
             app.UseStaticFiles();
             app.UseSession();
             app.UseMvc(routes =>

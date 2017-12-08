@@ -1,72 +1,100 @@
 ﻿@using System.Configuration
 @using MySql.Data.MySqlClient
 @using Microsoft.AspNetCore.Mvc
+@using System.Web
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Razor;
+@using Microsoft.AspNetCore.Hosting;
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Session
+@using Microsoft.AspNetCore.Builder
+
 @{
-    ViewData["Title"] = "Mensa Order System | Details";
 
+        ViewData["Title"] = "Mensa Order System | Details";
+        MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
+        HttpContext con = HttpContextNew.get_con();
+    
 
-    MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
-
-    try
-    {
-        con1.Open();
-        MySqlCommand cmd;
-        cmd = con1.CreateCommand();
-
-        if (ViewData["prodid"] == null) {
-
-            ViewData["header_addition"] = "<meta http-equiv=\"refresh\" content=\"3; url=/\"/>";
-            return; }
-
-        String cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Preis` ON `Preis`.`Id` = `Produkt`.`FK_Preis` LEFT JOIN `Bild` ON `Bild`.`Id` = `Produkt`.`FK_Bild` WHERE `Produkt`.`Id`='" + ViewData["prodid"] + "' LIMIT 1";
-
-
-        cmd.CommandText = cmdb;
-        MySqlDataReader r = cmd.ExecuteReader();
-        bool done = false;
-        while (r.Read())
+        String id = con.Request.Query["id"];
+        if (!String.IsNullOrEmpty(con.Session.Get<String>("role")) && (con.Session.Get<String>("role") == "Student" || con.Session.Get<String>("role") == "Gast" || con.Session.Get<String>("role") == "Mitarbeiter"))
         {
-            ViewData["Titel"] = (String)r["Titel"];
-            ViewData["Beschreibung"] = (String)r["Beschreibung"];
-
-
-
-            if (ViewData["role"] != null && (String)ViewData["role"] == "Student")
-            {
-                ViewData["preis"] = r["Studentenbetrag"];
-            }
-            else if (ViewData["role"] != null && (String)ViewData["role"] == "Mitarbeiter")
-            {
-                ViewData["preis"] = r["Mitarbeiterbetrag"];
-            }
-            else
-            {
-                ViewData["preis"] = r["Gastbetrag"];
-            }
-
-            ViewData["img_path"] = r["DetailsBildPfad"];
-            done = true;
-
+            ViewData["role"] =con.Session.Get<String>("role");
+        }
+        else
+        {
+            ViewData["role"] = "Gast";
+        }
+        if (id != null)
+        {
+            ViewData["prodid"] = id;
+        }
+        else
+        {
+            //TODO SET HEADER
         }
 
 
-        con1.Close();
-
-        if (!done)
+        try
         {
+            con1.Open();
+            MySqlCommand cmd;
+            cmd = con1.CreateCommand();
 
-            ViewData["header_addition"] = "<meta http-equiv=\"refresh\" content=\"3; url=/\"/>";
+            if (ViewData["prodid"] == null) {
+
+                ViewData["header_addition"] = "<meta http-equiv=\"refresh\" content=\"3; url=/\"/>";
+                return; }
+
+            String cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Preis` ON `Preis`.`Id` = `Produkt`.`FK_Preis` LEFT JOIN `Bild` ON `Bild`.`Id` = `Produkt`.`FK_Bild` WHERE `Produkt`.`Id`='" + ViewData["prodid"] + "' LIMIT 1";
+
+
+            cmd.CommandText = cmdb;
+            MySqlDataReader r = cmd.ExecuteReader();
+            bool done = false;
+            while (r.Read())
+            {
+                ViewData["Titel"] = (String)r["Titel"];
+                ViewData["Beschreibung"] = (String)r["Beschreibung"];
+
+
+
+                if (ViewData["role"] != null && (String)ViewData["role"] == "Student")
+                {
+                    ViewData["preis"] = r["Studentenbetrag"];
+                }
+                else if (ViewData["role"] != null && (String)ViewData["role"] == "Mitarbeiter")
+                {
+                    ViewData["preis"] = r["Mitarbeiterbetrag"];
+                }
+                else
+                {
+                    ViewData["preis"] = r["Gastbetrag"];
+                }
+
+                ViewData["img_path"] = r["DetailsBildPfad"];
+                done = true;
+
+            }
+
+
+            con1.Close();
+
+            if (!done)
+            {
+
+                ViewData["header_addition"] = "<meta http-equiv=\"refresh\" content=\"3; url=/\"/>";
 
             <script>
                 alert("Diese Produkt is leider nicht verfügbar");
                 window.setTimeout('location.href="/"', 3000);;
             </script>
-            return;
-        }
+                    return;
+            }
 
-    }
-    catch (Exception e)
-    {
+        }
+        catch (Exception e)
+        {
         <p class="error">Das hat nicht geklappt.</p>
                     <pre>@e.Message</pre>
     }
@@ -86,7 +114,7 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     @{
-                                        if (ViewData["role"] == null)
+                                        if (ViewData["role"] == "Gast" || ViewData["role"] == null)
                                         {
                                     <form method="post" action="Login">
                                         <fieldset>
@@ -125,7 +153,7 @@
                 <div class="row">
                     <div class="col-md-2">
                     @{
-                        if (ViewData["role"] == null)
+                        if (ViewData["role"] == "Gast" || ViewData["role"] == null)
                         {
                     <span>Melden Sie sich jetzen an um wirklich günstigeren Preis für Mitarbeiter und Studenten zu sehen</span</div>
                             }
