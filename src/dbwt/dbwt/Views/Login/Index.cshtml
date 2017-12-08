@@ -10,33 +10,14 @@
 @using Microsoft.AspNetCore.Builder
 @{
 
-
+    //ASPNET CORE WORKAROUND
     HttpContext cont = HttpContextNew.get_con();
-    /*
-    if (!String.IsNullOrEmpty(cont.Request.Query["action"]))
-    {
-        ViewData["action"] = cont.Request.Query["action"];
-    }
-       if (!String.IsNullOrEmpty(cont.Request.Query["username"]))
-    {
-        ViewData["username"] = cont.Request.Query["username"];
-    }
-           if (!String.IsNullOrEmpty(cont.Request.Query["password"]))
-    {
-        ViewData["password"] = cont.Request.Query["password"];
-    }
-    if (!String.IsNullOrEmpty(cont.Request.Query["method"]))
-    {
-        ViewData["method"] = cont.Request.Query["method"];
-    }
-    */
-    int tr = 5;
 
 
-   
+ 
 
 
-    if (!String.IsNullOrEmpty(cont.Session.Get<String>("user")) && ViewData["action"] != null &&  (String)ViewData["action"] == "logout")
+    if (!String.IsNullOrEmpty(cont.Session.Get<String>("user")) && !String.IsNullOrEmpty(cont.Request.Form["action"]) &&  cont.Request.Form["action"] == "logout")
             {
                 cont.Session.Set<String>("user", null);
                 cont.Session.Set<String>("role", "Gast");
@@ -48,18 +29,19 @@
 
 
 
-                if (!String.IsNullOrEmpty((String)ViewData["username"]) && !String.IsNullOrEmpty((String)ViewData["password"]) &&  (String)ViewData["action"] == "login" &&  (String)ViewData["method"] == "post")
+                if (cont.Request.Method == "POST" && !String.IsNullOrEmpty(cont.Request.Form["username"]) && !String.IsNullOrEmpty(cont.Request.Form["password"]) &&  cont.Request.Form["action"] == "login")
                 {
-                    string hash_com = PasswordSecurity.PasswordStorage.CreateHash((String)ViewData["password"]);
+                    string hash_com = PasswordSecurity.PasswordStorage.CreateHash(cont.Request.Form["password"]);
                     string hash_db = "";
                     string role = "";
                     MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
                     try
                     {
+
                         con1.Open();
                         MySqlCommand cmd;
                         cmd = con1.CreateCommand();
-                        cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE `Loginname`='"+(String)ViewData["username"]+"' LIMIT 1";
+                        cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE `Loginname`='"+cont.Request.Form["username"]+"' LIMIT 1";
                         MySqlDataReader r = cmd.ExecuteReader();
                         while (r.Read())
                         {
@@ -75,16 +57,18 @@
                             role = (String)r["Benutzerrolle"];
                         }
                         con1.Close();
-                        if (PasswordSecurity.PasswordStorage.VerifyPassword((String)ViewData["password"], hash_db))
+
+
+                        if (PasswordSecurity.PasswordStorage.VerifyPassword(cont.Request.Form["password"], hash_db))
                         {
                             ViewData["state"] = 1;
-                            ViewData["user"] = (String)ViewData["username"];
-                            cont.Session.Set<String>("user", (String)ViewData["username"]);
+                            ViewData["user"] = cont.Request.Form["username"];
+                            cont.Session.Set<String>("user", cont.Request.Form["username"]);
                             cont.Session.Set<String>("role", role);
                         }
                         else
                         {
-                            ViewData["username"] = (String)ViewData["username"];
+                            ViewData["username"] = cont.Request.Form["username"];
                             ViewData["state"] = 3;
                         }
 

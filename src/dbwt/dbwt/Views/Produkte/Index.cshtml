@@ -13,7 +13,7 @@
 
 
     HttpContext cont = HttpContextNew.get_con();
-
+    if(cont.Request.Method == "GET"){
     if (String.IsNullOrEmpty(cont.Request.Query["kategorie"]) || cont.Request.Query["kategorie"] == "")
     {
         ViewData["KategorieName"] = "Bestseller";
@@ -26,10 +26,12 @@
 
     if (!String.IsNullOrEmpty(cont.Request.Query["limit"].ToString()))
     {
-        ViewData["limit"] = cont.Request.Query["limit"].ToString();
+
+ViewData["limit"] = cont.Request.Query["limit"].ToString();
     }
 
-    int tr = 5;
+    }
+  
 
 }
 

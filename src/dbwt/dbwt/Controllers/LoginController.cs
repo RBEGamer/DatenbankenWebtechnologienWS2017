@@ -37,10 +37,10 @@ namespace dbwt.Controllers
         {
             HttpContextNew.set_con(HttpContext);
 
-            ViewData["action"] = action;
-            ViewData["username"] = username;
-            ViewData["password"] = password;
-            ViewData["method"] = "post";
+            //ViewData["action"] = action;
+            //ViewData["username"] = username;
+            //ViewData["password"] = password;
+            //ViewData["method"] = "post";
 
             //ViewData["method"] = "post";
             /*
