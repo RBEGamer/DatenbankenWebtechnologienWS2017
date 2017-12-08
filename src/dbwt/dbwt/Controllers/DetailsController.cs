@@ -34,9 +34,7 @@ namespace dbwt.Controllers
         [HttpGet]
         public ActionResult Index(String id)
         {
-            HttpContext.Session.Set<String>("user", "123");
-            HttpContext.Session.Set<String>("role", "Student");
-
+           
             if (!String.IsNullOrEmpty(HttpContext.Session.Get<String>("role")) && (HttpContext.Session.Get<String>("role") == "Student" || HttpContext.Session.Get<String>("role") == "Gast" || HttpContext.Session.Get<String>("role") == "Mitarbeiter"))
             {       
                 ViewData["role"] = HttpContext.Session.Get<String>("role");

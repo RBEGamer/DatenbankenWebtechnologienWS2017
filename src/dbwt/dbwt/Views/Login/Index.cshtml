@@ -1,0 +1,117 @@
+﻿@using System.Configuration
+@using MySql.Data.MySqlClient
+@using Microsoft.AspNetCore.Mvc
+@{
+    ViewData["Title"] = "Mensa Order System | Login";
+
+    if(ViewData["state"] == null)
+    {
+        <h1>ERROR</h1>
+        return;
+    }
+
+    if ((int)ViewData["state"] == 2)
+    {
+        <h1>PASSWORT ODER BENUTERNAME FALSCH</h1>
+        <form action="/Login" method="post">
+            <div class="container" style="color: rgb(255, 0, 0)" ;>
+                <label><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="username" value="@ViewData["username"]" required>
+                <label><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" required>
+                <input type="hidden" name="action" value="login" />
+                <button type="submit">Login</button>
+            </div>
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" class="cancelbtn">Cancel</button>
+            </div>
+        </form>
+        return;
+    }
+
+    if ((int)ViewData["state"] == 0)
+    {
+        <form action="/Login" method="post">
+            <div class="container">
+                <label><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="username" required>
+                <label><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" required>
+                <input type="hidden" name="action" value="login" />
+                <button type="submit">Login</button>
+            </div>
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" class="cancelbtn">Cancel</button>
+            </div>
+        </form>
+    }
+    else if ((int)ViewData["state"] == 3)
+    {
+        <h1>PASSWORT ODER BENUTERNAME FALSCH</h1>
+        <form action="/Login" method="post">
+            <div class="container" style="color: rgb(255, 0, 0)";>
+                <label><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" name="username" value="@ViewData["username"]" required>
+                <label><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" name="password" required>
+                <input type="hidden" name="action" value="login"/>
+                <button type="submit">Login</button>
+            </div>
+            <div class="container" style="background-color:#f1f1f1">
+                <button type="button" class="cancelbtn">Cancel</button>
+            </div>
+        </form>
+    }
+    else if ((int)ViewData["state"] == 1)
+    {
+        MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
+        try
+        {
+            con1.Open();
+            MySqlCommand cmd;
+            cmd = con1.CreateCommand();
+            if (ViewData["user"] == null) { return; }
+            cmd.CommandText = "SELECT * FROM `FE-Nutzer` LEFT JOIN `Mitarbeiter` ON `Mitarbeiter`.`FK_Fe-Nutzer` = `FE-Nutzer`.`Nr` LEFT JOIN `Student` ON `Student`.`FK_Fe-Nutzer` = `FE-Nutzer`.`Nr` WHERE `Loginname`='" + ViewData["user"] + "' LIMIT 1";
+            MySqlDataReader r = cmd.ExecuteReader();
+            while (r.Read())
+            {
+                if ((String)r["Benutzerrolle"] == "Student")
+                {
+                    <span>Hallo,<b>@ViewData["user"]</b> (@r["Matrikelnummer"]). Sie sind Angemeldet als 
+                <b>@r["Studiengang"]</b><br />
+                </span>            
+                }
+                else if ((String)r["Benutzerrolle"] == "Mitarbeiter")
+                {
+                    <h2>@r["MA-Nummer"]</h2><br />
+                    <h2>@r["Büro"]</h2><br />
+                }
+            }
+            con1.Close();
+
+            <br /><br />
+            <form action="Login" method="post">
+<input type="hidden" name="action" value="logout" />
+                <input type="submit" value="ABMELDEN" />
+
+            </form>
+        }
+        catch (Exception e)
+        {
+                    <p class="error">Das hat nicht geklappt.</p>
+                    <pre>@e.Message</pre>
+        }
+
+
+
+    }
+}
+
+
+
+
+
+
+
+
+
