@@ -13,14 +13,17 @@
         MySqlCommand cmd;
         cmd = con1.CreateCommand();
 
-        if(ViewData["prodid"] == null) { return; }
+        if (ViewData["prodid"] == null) {
 
-        String cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Preis` ON `Preis`.`Id` = `Produkt`.`FK_Preis` LEFT JOIN `Bild` ON `Bild`.`Id` = `Produkt`.`FK_Bild` WHERE `Produkt`.`Id`='" + ViewData["prodid"] +"' LIMIT 1";
+            ViewData["header_addition"] = "<meta http-equiv=\"refresh\" content=\"3; url=/\"/>";
+            return; }
+
+        String cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Preis` ON `Preis`.`Id` = `Produkt`.`FK_Preis` LEFT JOIN `Bild` ON `Bild`.`Id` = `Produkt`.`FK_Bild` WHERE `Produkt`.`Id`='" + ViewData["prodid"] + "' LIMIT 1";
 
 
         cmd.CommandText = cmdb;
         MySqlDataReader r = cmd.ExecuteReader();
-        List<PROD_DESC> products = new List<PROD_DESC>();
+        bool done = false;
         while (r.Read())
         {
             ViewData["Titel"] = (String)r["Titel"];
@@ -42,9 +45,25 @@
             }
 
             ViewData["img_path"] = r["DetailsBildPfad"];
+            done = true;
 
         }
+
+
         con1.Close();
+
+        if (!done)
+        {
+
+            ViewData["header_addition"] = "<meta http-equiv=\"refresh\" content=\"3; url=/\"/>";
+
+            <script>
+                alert("Diese Produkt is leider nicht verfügbar");
+                window.setTimeout('location.href="/"', 3000);;
+            </script>
+            return;
+        }
+
     }
     catch (Exception e)
     {
@@ -66,14 +85,20 @@
                         <div class="col-md-2">
                             <div class="row">
                                 <div class="col-md-12">
+                                    @{
+                                        if (ViewData["role"] == null)
+                                        {
                                     <form method="post" action="Login">
                                         <fieldset>
                                             <legend>Login </legend>
                                             <input class="form-control" type="text" name="username" required="" placeholder="Benutzer">
                                             <input class="form-control" type="password" name="password" required="" placeholder="password">
+                                            <input type="hidden" name="action" value="login" />
                                             <input class="btn btn-link link_button" type="submit" value="Anmelden" />
                                         </fieldset>
                                     </form>
+                                        }
+                                        }
                                 </div>
                             </div>
                         </div>
@@ -93,13 +118,20 @@
 
                                     </button>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
                     
                 </div>
                 <div class="row">
-                    <div class="col-md-2"><span>Melden Sie sich jetzen an um wirklich günstigeren Preis für Mitarbeiter und Studenten zu sehen</span></div>
-                    
+                    <div class="col-md-2">
+                    @{
+                        if (ViewData["role"] == null)
+                        {
+                    <span>Melden Sie sich jetzen an um wirklich günstigeren Preis für Mitarbeiter und Studenten zu sehen</span</div>
+                            }
+                        }
+                  </div>
+
                     <div class="col-md-8">
                         <div>
                                     <!-- TAB START-->

@@ -3,13 +3,11 @@
 @using Microsoft.AspNetCore.Mvc
 @{
     ViewData["Title"] = "Mensa Order System | Login";
-
     if(ViewData["state"] == null)
     {
         <h1>ERROR</h1>
         return;
     }
-
     if ((int)ViewData["state"] == 2)
     {
         <h1>PASSWORT ODER BENUTERNAME FALSCH</h1>

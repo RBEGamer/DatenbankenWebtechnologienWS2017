@@ -21,6 +21,7 @@
     </DotNetCliToolReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Code\" />
     <Folder Include="Views\FormResponder\" />
     <Folder Include="Views\Produkte\" />
     <Folder Include="Views\Impressum\" />

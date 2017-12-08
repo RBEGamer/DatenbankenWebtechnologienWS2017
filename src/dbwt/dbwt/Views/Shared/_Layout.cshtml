@@ -24,6 +24,13 @@ string time = DateTime.Now.ToString("h:mm:ss tt");
             <script src="/assets/js/script.min.js"></script>
             <link rel="stylesheet" href="~/assets/css/Footer-Basic.css">
             <link rel="stylesheet" href="/assets/css/main_custom_style.css">
+
+            @{ 
+                if (ViewData["header_addition"] != null)
+                {
+                    Html.Raw(ViewData["header_addition"]);
+                }
+            }
         </head>
 
         <body>
