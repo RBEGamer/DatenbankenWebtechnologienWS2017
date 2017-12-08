@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace PasswordSecurity
 {
-    class InvalidHashException : Exception
+    public class InvalidHashException : Exception
     {
         public InvalidHashException() { }
         public InvalidHashException(string message)
@@ -14,7 +14,7 @@ namespace PasswordSecurity
             : base(message, inner) { }
     }
 
-    class CannotPerformOperationException : Exception
+    public class CannotPerformOperationException : Exception
     {
         public CannotPerformOperationException() { }
         public CannotPerformOperationException(string message)
@@ -23,7 +23,7 @@ namespace PasswordSecurity
             : base(message, inner) { }
     }
 
-    class PasswordStorage
+    public class PasswordStorage
     {
         // These constants may be changed without breaking existing hashes.
         public const int SALT_BYTES = 24;

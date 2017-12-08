@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using dbwt.Models;
 using MySql.Data.MySqlClient;
+
 namespace dbwt.Controllers
 {
     public class Produkte : Controller
@@ -34,8 +35,11 @@ namespace dbwt.Controllers
         public IActionResult Index(String kategorie, String only_avariable,String without_meat, String only_vegan, String limit)
         {
             HttpContextNew.set_con(HttpContext);
-
-            
+            //TODO  REMOVE FOR ASPNET CORE 2.0
+            if (!String.IsNullOrEmpty(limit))
+            {
+                ViewData["limit"] = limit;
+            }
                 return View();
         }
 

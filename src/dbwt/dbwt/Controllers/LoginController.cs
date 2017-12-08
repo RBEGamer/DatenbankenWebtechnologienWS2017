@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using System.Configuration;
 using MySql.Data.MySqlClient;
-using Microsoft.AspNetCore.Mvc;
 // For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
 namespace dbwt.Controllers
@@ -15,6 +14,8 @@ namespace dbwt.Controllers
         // GET: /<controller>/
         public IActionResult Index()
         {
+            HttpContextNew.set_con(HttpContext);
+            /*
             if (String.IsNullOrEmpty(HttpContext.Session.Get<String>("user")))
             {
                 ViewData["state"] = 0;
@@ -24,6 +25,7 @@ namespace dbwt.Controllers
                 ViewData["state"] = 1;
                 ViewData["user"] = HttpContext.Session.Get<String>("user");
             }
+            */
             return View();
         }
 
@@ -33,8 +35,15 @@ namespace dbwt.Controllers
         [HttpPost]
         public ActionResult Index(String username, String password, String action)
         {
+            HttpContextNew.set_con(HttpContext);
+
+            ViewData["action"] = action;
+            ViewData["username"] = username;
+            ViewData["password"] = password;
             ViewData["method"] = "post";
 
+            //ViewData["method"] = "post";
+            /*
             if (!String.IsNullOrEmpty(HttpContext.Session.Get<String>("user")) && action != null && action == "logout")
             {
                 HttpContext.Session.Set<String>("user", null);
@@ -101,6 +110,7 @@ namespace dbwt.Controllers
                 ViewData["state"] = 1;
                 ViewData["user"] = HttpContext.Session.Get<String>("user");
             }
+            */
             return View();
         }
 

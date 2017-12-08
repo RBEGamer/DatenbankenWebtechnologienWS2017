@@ -5,10 +5,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using dbwt.Models;
-using System.Linq;
-using System.Threading.Tasks;
 using MySql.Data.MySqlClient;
-using Microsoft.AspNetCore.Mvc;
+
 
 namespace dbwt.Controllers
 {

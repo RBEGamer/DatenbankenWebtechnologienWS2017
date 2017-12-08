@@ -1,7 +1,116 @@
 ﻿@using System.Configuration
 @using MySql.Data.MySqlClient
 @using Microsoft.AspNetCore.Mvc
+@using System.Web
+@using Microsoft.AspNetCore.Mvc;
+@using Microsoft.AspNetCore.Razor;
+@using Microsoft.AspNetCore.Hosting;
+@using Microsoft.AspNetCore.Http;
+@using Microsoft.AspNetCore.Session
+@using Microsoft.AspNetCore.Builder
 @{
+
+
+    HttpContext cont = HttpContextNew.get_con();
+    /*
+    if (!String.IsNullOrEmpty(cont.Request.Query["action"]))
+    {
+        ViewData["action"] = cont.Request.Query["action"];
+    }
+       if (!String.IsNullOrEmpty(cont.Request.Query["username"]))
+    {
+        ViewData["username"] = cont.Request.Query["username"];
+    }
+           if (!String.IsNullOrEmpty(cont.Request.Query["password"]))
+    {
+        ViewData["password"] = cont.Request.Query["password"];
+    }
+    if (!String.IsNullOrEmpty(cont.Request.Query["method"]))
+    {
+        ViewData["method"] = cont.Request.Query["method"];
+    }
+    */
+    int tr = 5;
+
+
+   
+
+
+    if (!String.IsNullOrEmpty(cont.Session.Get<String>("user")) && ViewData["action"] != null &&  (String)ViewData["action"] == "logout")
+            {
+                cont.Session.Set<String>("user", null);
+                cont.Session.Set<String>("role", "Gast");
+                ViewData["state"] = 0;
+            }
+
+                if (String.IsNullOrEmpty(cont.Session.Get<String>("user")))
+            {
+
+
+
+                if (!String.IsNullOrEmpty((String)ViewData["username"]) && !String.IsNullOrEmpty((String)ViewData["password"]) &&  (String)ViewData["action"] == "login" &&  (String)ViewData["method"] == "post")
+                {
+                    string hash_com = PasswordSecurity.PasswordStorage.CreateHash((String)ViewData["password"]);
+                    string hash_db = "";
+                    string role = "";
+                    MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
+                    try
+                    {
+                        con1.Open();
+                        MySqlCommand cmd;
+                        cmd = con1.CreateCommand();
+                        cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE `Loginname`='"+(String)ViewData["username"]+"' LIMIT 1";
+                        MySqlDataReader r = cmd.ExecuteReader();
+                        while (r.Read())
+                        {
+                            hash_db += (String)r["Algorythmus"];
+                            hash_db += ":";
+                            hash_db += "64000";
+                            hash_db += ":";
+                            hash_db += ((uint)r["Strech"]).ToString();
+                            hash_db += ":";
+                            hash_db += (String)r["Salt"];
+                            hash_db += ":";
+                            hash_db += (String)r["Hash"];                
+                            role = (String)r["Benutzerrolle"];
+                        }
+                        con1.Close();
+                        if (PasswordSecurity.PasswordStorage.VerifyPassword((String)ViewData["password"], hash_db))
+                        {
+                            ViewData["state"] = 1;
+                            ViewData["user"] = (String)ViewData["username"];
+                            cont.Session.Set<String>("user", (String)ViewData["username"]);
+                            cont.Session.Set<String>("role", role);
+                        }
+                        else
+                        {
+                            ViewData["username"] = (String)ViewData["username"];
+                            ViewData["state"] = 3;
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        ViewData["state"] = 2;
+                    }                  
+            }
+                else
+                {
+                    ViewData["state"] = 0;
+                }
+            }
+            else
+            {
+                ViewData["state"] = 1;
+                ViewData["user"] = cont.Session.Get<String>("user");
+            }
+
+
+
+
+
+
+
     ViewData["Title"] = "Mensa Order System | Login";
     if(ViewData["state"] == null)
     {
@@ -18,6 +127,7 @@
                 <label><b>Password</b></label>
                 <input type="password" placeholder="Enter Password" name="password" required>
                 <input type="hidden" name="action" value="login" />
+                <input type="hidden" name="method" value="post" />
                 <button type="submit">Login</button>
             </div>
             <div class="container" style="background-color:#f1f1f1">
@@ -36,6 +146,7 @@
                 <label><b>Password</b></label>
                 <input type="password" placeholder="Enter Password" name="password" required>
                 <input type="hidden" name="action" value="login" />
+        <input type="hidden" name="method" value="post" />
                 <button type="submit">Login</button>
             </div>
             <div class="container" style="background-color:#f1f1f1">
@@ -47,12 +158,13 @@
     {
         <h1>PASSWORT ODER BENUTERNAME FALSCH</h1>
         <form action="/Login" method="post">
-            <div class="container" style="color: rgb(255, 0, 0)";>
+            <div class="container" style="color: rgb(255, 0, 0)">
                 <label><b>Username</b></label>
                 <input type="text" placeholder="Enter Username" name="username" value="@ViewData["username"]" required>
                 <label><b>Password</b></label>
                 <input type="password" placeholder="Enter Password" name="password" required>
                 <input type="hidden" name="action" value="login"/>
+        <input type="hidden" name="method" value="post" />
                 <button type="submit">Login</button>
             </div>
             <div class="container" style="background-color:#f1f1f1">

@@ -24,7 +24,7 @@
         ViewData["KategorieId"] = cont.Request.Query["kategorie"].ToString();
     }
 
-    if (String.IsNullOrEmpty(cont.Request.Query["limit"].ToString()))
+    if (!String.IsNullOrEmpty(cont.Request.Query["limit"].ToString()))
     {
         ViewData["limit"] = cont.Request.Query["limit"].ToString();
     }
