@@ -22,7 +22,7 @@ select COUNT(inventory_id) as 'Anzahl Kopien' , film_id   from inventory where s
 --Loesung zu 7
 select rating,store_id ,count(inventory_id) from film join inventory on film.film_id = inventory.film_id
 group by store_id,rating
-order by store_id , rating asc
+order by store_id , cast(rating as char) asc
 
 
 --Loesung zu 8

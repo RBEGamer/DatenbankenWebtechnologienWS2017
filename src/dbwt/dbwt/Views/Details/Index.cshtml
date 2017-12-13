@@ -11,12 +11,13 @@
 
 @{
 
-        ViewData["Title"] = "Mensa Order System | Details";
+        ViewData["Title"] = "Details";
         MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
         HttpContext con = HttpContextNew.get_con();
     
 
         String id = con.Request.Query["id"];
+
         if (!String.IsNullOrEmpty(con.Session.Get<String>("role")) && (con.Session.Get<String>("role") == "Student" || con.Session.Get<String>("role") == "Gast" || con.Session.Get<String>("role") == "Mitarbeiter"))
         {
             ViewData["role"] =con.Session.Get<String>("role");
@@ -32,6 +33,7 @@
         else
         {
             //TODO SET HEADER
+            @Html.Raw("<script>alert('FEHLENDER PARAMETER')</script>");
         }
 
 
