@@ -15,9 +15,9 @@
 
 
  
-
-
-    if (!String.IsNullOrEmpty(cont.Session.Get<String>("user")) && !String.IsNullOrEmpty(cont.Request.Form["action"]) &&  cont.Request.Form["action"] == "logout")
+  
+    
+    if (cont.Request.Method == "POST" && !String.IsNullOrEmpty(cont.Session.Get<String>("user")) && !String.IsNullOrEmpty(cont.Request.Form["action"]) &&  cont.Request.Form["action"] == "logout")
             {
                 cont.Session.Set<String>("user", null);
                 cont.Session.Set<String>("role", "Gast");
