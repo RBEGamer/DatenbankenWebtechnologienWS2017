@@ -1,4 +1,4 @@
-# Dossier - Ochsendorf Marcel | 3120232
+# Dossier
 
 * DWBT WS1718
 * http://github.com/RBEGamer/dwbt_praktikum_ws1718
