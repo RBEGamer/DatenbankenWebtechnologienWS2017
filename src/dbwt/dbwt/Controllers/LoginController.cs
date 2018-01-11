@@ -15,7 +15,7 @@ namespace dbwt.Controllers
         public IActionResult Index()
         {
             HttpContextNew.set_con(HttpContext);
-            /*
+
             if (String.IsNullOrEmpty(HttpContext.Session.Get<String>("user")))
             {
                 ViewData["state"] = 0;
@@ -25,7 +25,7 @@ namespace dbwt.Controllers
                 ViewData["state"] = 1;
                 ViewData["user"] = HttpContext.Session.Get<String>("user");
             }
-            */
+
             return View();
         }
 
@@ -37,13 +37,13 @@ namespace dbwt.Controllers
         {
             HttpContextNew.set_con(HttpContext);
 
-            //ViewData["action"] = action;
-            //ViewData["username"] = username;
-            //ViewData["password"] = password;
-            //ViewData["method"] = "post";
+            ViewData["action"] = action;
+            ViewData["username"] = username;
+            ViewData["password"] = password;
+            ViewData["method"] = "post";
 
-            //ViewData["method"] = "post";
-            /*
+            ViewData["method"] = "post";
+            
             if (!String.IsNullOrEmpty(HttpContext.Session.Get<String>("user")) && action != null && action == "logout")
             {
                 HttpContext.Session.Set<String>("user", null);
@@ -87,7 +87,82 @@ namespace dbwt.Controllers
                             ViewData["user"] = username;
                             HttpContext.Session.Set<String>("user", username);
                             HttpContext.Session.Set<String>("role", role);
-                        }
+
+                            HttpContext.Session.Set<bool>("admin", false);
+                            HttpContext.Session.Set<bool>("verified",false);
+                            //-------------------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+                            try
+                            {
+                                con1.Open();
+                                
+                                cmd = con1.CreateCommand();
+                                if (ViewData["user"] == null) { return View(); }
+                                cmd.CommandText = "SELECT * FROM `FE-Nutzer` LEFT JOIN `Mitarbeiter` ON `Mitarbeiter`.`FK_Fe-Nutzer` = `FE-Nutzer`.`Nr` LEFT JOIN `Student` ON `Student`.`FK_Fe-Nutzer` = `FE-Nutzer`.`Nr` WHERE `Loginname`='" + username + "' LIMIT 1";
+                                 r = cmd.ExecuteReader();
+                                while (r.Read())
+                                {
+                                    ViewData["Benutzerrolle"] = r["Benutzerrolle"];
+                                    if ((String)r["Benutzerrolle"] == "Student")
+                                    {
+                                        ViewData["Studiengang"] = r["Studiengang"];
+                                        ViewData["Matrikelnummer"] = r["Matrikelnummer"];
+                                    }
+                                    else if ((String)r["Benutzerrolle"] == "Mitarbeiter")
+                                    {
+                                        ViewData["MA-Nummer"] = r["MA-Nummer"];
+                                        ViewData["Büro"] = r["Büro"];
+                                    }
+
+
+                                    HttpContext.Session.Set<bool>("admin", (bool)r["admin"]);
+                                    HttpContext.Session.Set<bool>("verified", (bool)r["verified"]);
+
+
+
+                                    if ((bool)r["admin"])
+                                    {
+                                        //LIST NOT VERFIFIED
+                                        string tout = "<table><tr><th> USERNAME </th><th> ACTION </th></tr>";
+
+                                        tout += "<tr><td>USERNAME</td><td><form><input type='hidden' name='userid' value='1' /><input type='submit' value='VERIFIY USER' /></form></td></tr>";
+
+                                        tout += "</table>";
+                                        ViewData["table"] = tout;
+                                    }
+
+
+                                    if (!(bool)r["verified"])
+                                    {
+                                        ViewData["state"] = 4;
+                                    }
+
+                                    ViewData["lastlogin"] = r["LetzterLogin"];
+                                    //UPDATE `FE-Nutzer` SET `LetzterLogin`=CURRENT_TIMESTAMP WHERE `Loginname`='dbwt'
+                                    //TODO ADMIN STUFF HERE
+                                }
+
+                                //UPDATE LAST LOGIN
+                                cmd.CommandText = "UPDATE `FE-Nutzer` SET `LetzterLogin`=CURRENT_TIMESTAMP WHERE `Loginname`='"+username+"'";
+                                r = cmd.ExecuteReader();
+
+
+                                con1.Close();
+
+
+
+                                //UPDATE `FE-Nutzer` SET `LetzterLogin`=CURRENT_TIMESTAMP WHERE `Loginname`='dbwt'
+
+                            }
+                            catch (Exception e)
+                            {
+                            }
+      
+
+    //------------------------------------------------------------------------------------------------------------------------------------------------------
+}
                         else
                         {
                             ViewData["username"] = username;
@@ -110,7 +185,7 @@ namespace dbwt.Controllers
                 ViewData["state"] = 1;
                 ViewData["user"] = HttpContext.Session.Get<String>("user");
             }
-            */
+            
             return View();
         }
 

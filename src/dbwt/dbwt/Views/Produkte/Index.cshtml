@@ -10,29 +10,6 @@
 @using Microsoft.AspNetCore.Builder
 @{
     ViewData["Title"] = "Produkte";
-
-
-    HttpContext cont = HttpContextNew.get_con();
-    if(cont.Request.Method == "GET"){
-    if (String.IsNullOrEmpty(cont.Request.Query["kategorie"]) || cont.Request.Query["kategorie"] == "")
-    {
-        ViewData["KategorieName"] = "Bestseller";
-    }
-    else
-    {
-        ViewData["KategorieName"] = DB_ACCESS.Instance.read_kategori_by_id(cont.Request.Query["kategorie"].ToString());
-        ViewData["KategorieId"] = cont.Request.Query["kategorie"].ToString();
-    }
-
-    if (!String.IsNullOrEmpty(cont.Request.Query["limit"].ToString()))
-    {
-
-ViewData["limit"] = cont.Request.Query["limit"].ToString();
-    }
-
-    }
-  
-
 }
 
 <div class="container">
@@ -53,64 +30,10 @@ ViewData["limit"] = cont.Request.Query["limit"].ToString();
                     <li class="list-unstyled">
                         <div style="height: 40px;">
 
-                            <select name="kategorie">
-
-                                @{
-                                    // Verbindung zum DBMS
-                                    MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
-                                    try
-                                    {
-                                        con.Open();
-                                        MySqlCommand cmd;
-                                        cmd = con.CreateCommand();
-                                        cmd.CommandText = "SELECT * FROM `Kategorie` WHERE `Oberkategorie` IS NULL";
-                                        MySqlDataReader r = cmd.ExecuteReader();
-                                        List<KAT_DESC> under_categories = new List<KAT_DESC>();
-
- //                                       @Html.Raw("<optgroup label='Hauptkategorie'>");
-                                        while (r.Read())
-                                        {
-                                            KAT_DESC tmp = new KAT_DESC();
-                                            tmp.id = (int)r["Id"];
-                                            tmp.name = (String)r["Bezeichnung"];
-                                            under_categories.Add(tmp);
-                                          //  <option value="@r["Id"]"> @r["Bezeichnung"] </option>
-                                        }
-   //                                     @Html.Raw("</optgroup>");
-                                        //TODO ELSE CATEGORIES
-                                        con.Close();
-                                        foreach (KAT_DESC n in under_categories)
-                                        {
-                                            con.Open();
-                                            MySqlCommand cmd1;
-                                            cmd1 = con.CreateCommand();
-                                            cmd1.CommandText = "SELECT * FROM `Kategorie` WHERE `Oberkategorie`='" + n.id.ToString() + "'";
-                                            MySqlDataReader rkat = cmd1.ExecuteReader();
-                                            List<KAT_DESC> ucat = new List<KAT_DESC>();
-                                            while (rkat.Read())
-                                            {
-                                                ucat.Add(new KAT_DESC((String)rkat["Bezeichnung"], (int)rkat["Id"]));
-                                            }
-                                            con.Close();
-                                            if (ucat.Count() <= 0) { continue; }
-                                            @Html.Raw("<optgroup label='" + n.name + "'>");
-                                            foreach (KAT_DESC m in ucat)
-                                            {
-                                                <option value="@m.id"> @m.name </option>
-                                            }
-                                            @Html.Raw("</optgroup>");
-                                        }
-
-
-                                    }
-                                    catch (Exception e)
-                                    {
-                                        <p class="error">Das hat nicht geklappt.</p>
-                                                        <pre>@e.Message</pre>
-                                    }
-                                }
-                            </select>
-                            <div>
+                           
+                                            @Html.Raw(ViewData["KAT_OBJ_DATA"]);  
+                         
+                        
                     </li>
                     <li class="list-unstyled">
                         <div>
@@ -140,145 +63,8 @@ ViewData["limit"] = cont.Request.Query["limit"].ToString();
         </div>
         <div class="col-md-9">
 
+            @Html.Raw(ViewData["PROD"]);
 
-
-            @{
-                //SELECT * FROM `Produkt` LEFT JOIN `Bild` ON `Produkt`.`FK_bild` = `Bild`.`Id` WHERE 1
-                MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
-
-
-            
-                try
-                {
-                    con1.Open();
-                    MySqlCommand cmd;
-                    cmd = con1.CreateCommand();
-                    String cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Bild` ON `Produkt`.`FK_bild` = `Bild`.`Id` WHERE 1 ORDER BY RAND()";
-                    if (ViewData["KategorieId"] != null)
-                    {
-                        cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Bild` ON `Produkt`.`FK_bild` = `Bild`.`Id` WHERE `FK_Kategorie`='"+ ViewData["KategorieId"] + "' ORDER BY RAND()";
-                    }
-
-                    if(ViewData["limit"] != null)
-                    {
-                        cmdb += " LIMIT " + ViewData["limit"];
-                    }
-                    cmd.CommandText = cmdb;
-                    MySqlDataReader r = cmd.ExecuteReader();
-                    List<PROD_DESC> products = new List<PROD_DESC>();
-            int c = 0;
-                    while (r.Read())
-                    {
-            c++;
-                        PROD_DESC tmp = new PROD_DESC();
-                        tmp.Id = (int)r["Id"];
-                        tmp.Beschreibung = (String)r["Titel"];
-                        tmp.Ausverkauft = (bool)r["Ausverkauft"];
-                        tmp.AltText = (String)r["Alt-Text"];
-                        tmp.BildPfad = (String)r["IconBildPfad"];
-                        tmp.BildPfadGray = (String)r["IconBildPfadGray"];
-                        products.Add(tmp);
-                    }
-                    con1.Close();
-
-            if(c <= 0){
-             con1.Open();
-             @Html.Raw("<script>alert('UNGÜLTIGER PARAMETER')</script>");
-           //  ViewData["header_addition"] = "<meta http-equiv=\"refresh\" content=\"3; url=/\"/>";
-
-            
-            ViewData["KategorieName"] = "Bestseller";
-            cmdb = "SELECT * FROM `Produkt` LEFT JOIN `Bild` ON `Produkt`.`FK_bild` = `Bild`.`Id` WHERE 1 ORDER BY RAND()";
-            cmd.CommandText = cmdb;
-             r = cmd.ExecuteReader();
-            while (r.Read())
-                    {
-         
-                        PROD_DESC tmp = new PROD_DESC();
-                        tmp.Id = (int)r["Id"];
-                        tmp.Beschreibung = (String)r["Titel"];
-                        tmp.Ausverkauft = (bool)r["Ausverkauft"];
-                        tmp.AltText = (String)r["Alt-Text"];
-                        tmp.BildPfad = (String)r["IconBildPfad"];
-                        tmp.BildPfadGray = (String)r["IconBildPfadGray"];
-                        products.Add(tmp);
-                    }
-                    con1.Close();
-            }
-                    const int items_per_row = 5;
-                    int rows = (int)(products.Count() / items_per_row);
-
-
-                    @Html.Raw("<div class=\"row\" style=\"height: 200px; \">");
-                    int rc = 0;
-                    for (int i = 0; i < products.Count(); i++)
-                    {
-
-                        rc++;
-                        if (rc >= items_per_row)
-                        {
-                            rc = 0;
-                            @Html.Raw("</div>");
-                            @Html.Raw("<div class=\"row\" style=\"height: 200px; \">");
-                        }
-
-            
-                        String vg_text = "-- NO DATA --";
-                        String gclass = "";
-                        if (products[i].Ausverkauft)
-                        {
-                            <div class="col-md-2">
-                                <div class="speise-@products[i].Id">
-                                    <div class="row">
-                                        <div class="col-md-12"><img class="img-responsive" src="./assets/images/speise_icons/@products[i].BildPfadGray" width="100px" height="100px" alt="@products[i].AltText"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12 product_sold_out_text"><span> @products[i].Beschreibung </span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12 product_sold_out_text">VERGRIFFEN</div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        else
-                        {
-                            <div class="col-md-2">
-                                <div class="speise-@products[i].Id">
-                                    <div class="row">
-                                        <div><img class="img-responsive" src="./assets/images/speise_icons/@products[i].BildPfad" width="100px" height="100px"></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12"><span>@products[i].Beschreibung</span></div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12"><a href="Details?id=@products[i].Id">Details </a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-
-
-
-
-
-
-                    }
-
-
-
-
-
-
-
-                }
-                catch (Exception e)
-                {
-                    <p class="error">Das hat nicht geklappt.</p>
-                                        <pre>@e.Message</pre>
-                }
-
-            }
 
 
 

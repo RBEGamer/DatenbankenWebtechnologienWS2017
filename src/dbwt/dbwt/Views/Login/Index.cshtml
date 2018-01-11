@@ -11,86 +11,6 @@
 @{
 
  ViewData["Title"] = "LOGIN";
-    //ASPNET CORE WORKAROUND
-    HttpContext cont = HttpContextNew.get_con();
-
-
- 
-  
-    
-    if (cont.Request.Method == "POST" && !String.IsNullOrEmpty(cont.Session.Get<String>("user")) && !String.IsNullOrEmpty(cont.Request.Form["action"]) &&  cont.Request.Form["action"] == "logout")
-            {
-                cont.Session.Set<String>("user", null);
-                cont.Session.Set<String>("role", "Gast");
-                ViewData["state"] = 0;
-            }
-
-                if (String.IsNullOrEmpty(cont.Session.Get<String>("user")))
-            {
-
-
-
-                if (cont.Request.Method == "POST" && !String.IsNullOrEmpty(cont.Request.Form["username"]) && !String.IsNullOrEmpty(cont.Request.Form["password"]) &&  cont.Request.Form["action"] == "login")
-                {
-                    string hash_com = PasswordSecurity.PasswordStorage.CreateHash(cont.Request.Form["password"]);
-                    string hash_db = "";
-                    string role = "";
-                    MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
-                    try
-                    {
-
-                        con1.Open();
-                        MySqlCommand cmd;
-                        cmd = con1.CreateCommand();
-                        cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE `Loginname`='"+cont.Request.Form["username"]+"' LIMIT 1";
-                        MySqlDataReader r = cmd.ExecuteReader();
-                        while (r.Read())
-                        {
-                            hash_db += (String)r["Algorythmus"];
-                            hash_db += ":";
-                            hash_db += "64000";
-                            hash_db += ":";
-                            hash_db += ((uint)r["Strech"]).ToString();
-                            hash_db += ":";
-                            hash_db += (String)r["Salt"];
-                            hash_db += ":";
-                            hash_db += (String)r["Hash"];                
-                            role = (String)r["Benutzerrolle"];
-                        }
-                        con1.Close();
-
-
-                        if (PasswordSecurity.PasswordStorage.VerifyPassword(cont.Request.Form["password"], hash_db))
-                        {
-                            ViewData["state"] = 1;
-                            ViewData["user"] = cont.Request.Form["username"];
-                            cont.Session.Set<String>("user", cont.Request.Form["username"]);
-                            cont.Session.Set<String>("role", role);
-                        }
-                        else
-                        {
-                            ViewData["username"] = cont.Request.Form["username"];
-                            ViewData["state"] = 3;
-                        }
-
-                    }
-                    catch (Exception e)
-                    {
-                        ViewData["state"] = 2;
-                    }                  
-            }
-                else
-                {
-                    ViewData["state"] = 0;
-                }
-            }
-            else
-            {
-                ViewData["state"] = 1;
-                ViewData["user"] = cont.Session.Get<String>("user");
-            }
-
-
 
 
 
@@ -159,43 +79,54 @@
     }
     else if ((int)ViewData["state"] == 1)
     {
-        MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
-        try
-        {
-            con1.Open();
-            MySqlCommand cmd;
-            cmd = con1.CreateCommand();
-            if (ViewData["user"] == null) { return; }
-            cmd.CommandText = "SELECT * FROM `FE-Nutzer` LEFT JOIN `Mitarbeiter` ON `Mitarbeiter`.`FK_Fe-Nutzer` = `FE-Nutzer`.`Nr` LEFT JOIN `Student` ON `Student`.`FK_Fe-Nutzer` = `FE-Nutzer`.`Nr` WHERE `Loginname`='" + ViewData["user"] + "' LIMIT 1";
-            MySqlDataReader r = cmd.ExecuteReader();
-            while (r.Read())
-            {
-                if ((String)r["Benutzerrolle"] == "Student")
+       
+                if ((String)ViewData["Benutzerrolle"] == "Student")
                 {
-                    <span>Hallo,<b>@ViewData["user"]</b> (@r["Matrikelnummer"]). Sie sind Angemeldet als 
-                <b>@r["Studiengang"]</b><br />
-                </span>            
+                    <span>
+                        Hallo,<b>@ViewData["user"]</b> (@ViewData["Matrikelnummer"]). Sie sind Angemeldet als
+                        <b>@ViewData["Studiengang"]</b><br />
+                    </span>
                 }
-                else if ((String)r["Benutzerrolle"] == "Mitarbeiter")
+                else if ((String)ViewData["Benutzerrolle"] == "Mitarbeiter")
                 {
-                    <h2>@r["MA-Nummer"]</h2><br />
-                    <h2>@r["Büro"]</h2><br />
+                    <h2>@ViewData["MA-Nummer"]</h2><br />
+                    <h2>@ViewData["Büro"]</h2><br />
                 }
-            }
-            con1.Close();
+        <span>Du warst das letzte mal am @ViewData["lastlogin"] angemeldet.</span>
 
-            <br /><br />
-            <form action="Login" method="post">
-<input type="hidden" name="action" value="logout" />
+
+        if (!String.IsNullOrEmpty((String)ViewData["table"]))
+        {
+             @Html.Raw(ViewData["table"]);
+        }
+
+        //TODO ADMIN STUFF HERE
+
+                <br /><br />
+             <form action="Login" method="post">
+                <input type="hidden" name="action" value="logout" />
                 <input type="submit" value="ABMELDEN" />
 
             </form>
-        }
-        catch (Exception e)
-        {
-                    <p class="error">Das hat nicht geklappt.</p>
-                    <pre>@e.Message</pre>
-        }
+
+
+
+
+    }
+    else if ((int)ViewData["state"] == 4)
+    {
+
+        <span> YOU ARE NOT VERIFIED</span>
+
+
+        //TODO ADMIN STUFF HERE
+
+        <br /><br />
+                <form action="Login" method="post">
+                    <input type="hidden" name="action" value="logout" />
+                    <input type="submit" value="ABMELDEN" />
+                </form>
+
 
 
 

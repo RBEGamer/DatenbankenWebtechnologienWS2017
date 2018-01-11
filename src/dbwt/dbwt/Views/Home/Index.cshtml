@@ -15,7 +15,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-2">
-                            <p>Der Dienst e-Mensa ist noch beta. Sie können bereits <a href="#" >Mahlzeiten</a> durchstöbern, aber noch nicht bestellen</p>
+                            <p>Der Dienst e-Mensa ist noch beta. Sie können bereits @Html.ActionLink("Mahlzeiten", "Index", "Produkte") durchstöbern, aber noch nicht bestellen</p>
                         </div>
                         <div class="col-md-8">
                             <div>
@@ -48,7 +48,7 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-2">
-                            <p>Registrieren Sie sich <a href="Login">hier</a>, um über die Veröffentlichung des Dienstes per Mail informiert zu werden.</p>
+                            <p>Registrieren Sie sich @Html.ActionLink("hier", "Index", "Login"), um über die Veröffentlichung des Dienstes per Mail informiert zu werden.</p>
                         </div>
                         <div class="col-md-10">
                             <img class="img-responsive img-size" src="./assets/images/generic_food_bg.png" alt="our generic mensa food">
