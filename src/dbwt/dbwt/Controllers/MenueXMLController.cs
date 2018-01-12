@@ -15,30 +15,55 @@ namespace dbwt.Controllers
 
         public Menue ParseMenueFromXML(){
 
-            List<Menue> menues = new List<Menue>();
 
+            Menue neuesMenue = new Menue();
+
+            Dictionary<string, Produkt> Produkte = new Dictionary<string, Produkt>();
 
             /*Auslesen des XML und Speichern in einer Liste mit Menü Objekten*/
 
             try
             {  /*TODO PFAD FIXEN   */
 
-                
-                
 
-                var document = XDocument.Load(@"C:\DBWT\XMLFiles\mondial-europe.xml");
+
+
+                var document = XDocument.Load(@"HIER PFAD ZUR XML");
                 XElement root = document.Root; // Wurzelelement
-                IEnumerable<XElement> menueListings = document.Elements();
-
-                var prods = root
-               .Descendants("Produkte")
-               .SelectMany(x => x.Descendants("Produkt"));
-
+                var menu = from e in root.Descendants("Menu") where (int)(Convert.ToDateTime(e.Attribute("Tag").Value).DayOfWeek) == weekday select e;
+                var kw = (from e in root.Descendants("Menu") where (int)(Convert.ToDateTime(e.Attribute("Tag").Value).DayOfWeek) == weekday select e.Attribute("Kalenderwoche")).ToList()[0].Value.ToString();
+                var motto = (from e in menu.Elements() select e).ToList()[0].Value.ToString();
+                var produkte = (from e in menu.Descendants("Produkte").Descendants("Produkt") select e).ToList();
 
 
-                //          Erzeugt eine List<XElement> mit allen <City> Elementen aus desc
+                neuesMenue.Motto = motto.ToString();
+                neuesMenue.
 
-                var prodIds = prods.Elements("city").Value.ToList();
+
+                for (int i = 0; i < produkte.Count(); i++)
+                {
+
+                    Convert.ToString(produkte[i].Attribute("ProduktID").Value);
+
+
+                    MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhabe
+
+                    con1.Open();
+                    MySqlCommand cmd;
+                    cmd = con1.CreateCommand();
+                    cmd.CommandText = "SELECT * FROM `Produkte` WHERE `Loginname`='" + username + "' LIMIT 1";
+                    MySqlDataReader r = cmd.ExecuteReader();
+
+
+
+                    /*Datenbankabfrage hier */
+
+                }
+
+
+
+                
+                
 
 
                 MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhabe
@@ -58,27 +83,7 @@ namespace dbwt.Controllers
 
 
 
-                    foreach ( var listings in menueListings ) {
-
-                    Menue eintrag = new Menue();
-                    eintrag.KW = listings.Element("Kalenderwoche").Value ;
-                    eintrag.Motto = listings.Element("Motto").Value;
-                    eintrag.Tag = listings.Element("Tag").Value;
-  
-                    var prods = xel.Descendants("Produkte");
-                   
-
-                   
-                    eintrag.Produkte = prods.ToDictionary(
-                        m => m.Attribute("ProduktID").Value,
-                        m => m.Element("Produkt").Value
-                        );
-
-
-
-
-                    menues.Add(listings)
-                }
+                 
 
 
 

@@ -7,9 +7,9 @@ namespace dbwt.Models
 {
     public class Menue
     {
-        public string Tag { get; set; }
+        public DateTime Tag { get; set; }
 
-        public string KW { get; set; }
+        public int KW { get; set; }
 
         public string Motto { get; set; }
 
