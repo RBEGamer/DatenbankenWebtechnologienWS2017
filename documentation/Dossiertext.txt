@@ -1,0 +1,10 @@
+Aufgabe 6.2 : Kriterien des Backend Nutzers
+
+In der gewählten Lösung wurde die Tabelle FE NUTZER um die spalten "verified" und "admin" erweitert, die
+die jeweils in einem einfaches tinyint code speichern, ob der Benutzer verfifiziert(Code: 1) und/oder ein
+Admin ist (Code:1). Zum einen sind Flags für Entwickler leicht zu verstehen und ermöglichen es ebenfalls in
+anderen Queries einfach Abfragen nach den gesuchten Zielpersonen zu stellen.
+Eine separate Tabelle mit BE Nutzern würde nur eine unnötige Komplizierung darstellen, da sich Backend Nutzer
+im Bezug auf die Mensa nur in einer Funktion unterscheiden, dies rechtfertigt keine neue Tabelle.
+Weiterhin müsste beim Aufsteigen eines gewöhnlichen Nutzer zum Backend Nutzer ein gesamter Datensatz verschoben
+werden.
