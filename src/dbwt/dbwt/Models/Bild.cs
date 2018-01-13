@@ -7,6 +7,15 @@ namespace dbwt.Models
 {
     public class Bild
     {
+        public Bild()
+        {
+
+        }
+
+        public Bild(String p)
+        {
+            img_path = p;
+        }
         public string alttext { get; set; }
 
         public string titel { get; set; }

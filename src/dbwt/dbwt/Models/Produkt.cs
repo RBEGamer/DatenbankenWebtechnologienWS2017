@@ -9,11 +9,11 @@ namespace dbwt.Models
 
     public struct Preis
     {
-        public Preis(float a, float b, float c)
+        public Preis(String a, String b, String c)
         {
-            Studentenbetrag = a;
-            Mitarbeiterbetrag = b;
-            Gastbeitrag = c;
+            Studentenbetrag = float.Parse(a);
+            Mitarbeiterbetrag = float.Parse(b);
+            Gastbeitrag = float.Parse(c);
         }
         public float Studentenbetrag;
         public float Mitarbeiterbetrag;
@@ -28,7 +28,7 @@ namespace dbwt.Models
 
         public string Beschreibung { get; set; }
 
-        List<Bild> Bilder;
+        public List<Bild> Bilder;
 
         public string Typ { get; set; }
         public string Titel { get; set; }
