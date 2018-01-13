@@ -32,8 +32,35 @@ namespace dbwt.Controllers
         }
 
 
+        [HttpGet]
+        public ActionResult Index(String d)
+        {
+            if (!String.IsNullOrEmpty(d)) {
+            ViewData["req_ok"] = false;
+            ViewData["loginname"] = "testuser";
+            ViewData["vorname"] = "test";
+            ViewData["nachname"] = "user";
+            ViewData["email"] = "test@test.de";
+            ViewData["role"] = "student";
+            ViewData["studgang"] = "LOOOOL";
+            ViewData["tel"] = "1337";
+            ViewData["buro"] = "KEIN";
+            ViewData["mannr"] = "424242";
+            ViewData["password"] = "1234";
+            ViewData["password_wdh"] = "1234";
+            ViewData["imv_email"] = false;
+            ViewData["imv_user"] = false;
+                ViewData["grund"] = "Ich bin ein teichfisch";
+                ViewData["ablauf"] = "2019-01-23";
+            }
+
+            return View();
+        }
+
+
+
         [HttpPost]
-        public ActionResult Index(String loginname,String vorname, String nachname, String email, String password, String password_wdh, String role, String matnr, String studgang, String tel, String buro, String mannr)
+        public ActionResult Index(String loginname,String vorname, String nachname, String email, String password, String password_wdh, String role, String matnr, String studgang, String tel, String buro, String mannr, String grund, String ablauf)
         {
 
 
@@ -48,7 +75,8 @@ namespace dbwt.Controllers
             ViewData["tel"] = tel;
             ViewData["buro"] = buro;
             ViewData["mannr"] = mannr;
-
+            ViewData["grund"] = grund;
+            ViewData["ablauf"] = ablauf;
             ViewData["imv_email"] = false;
             ViewData["imv_user"] = false;
 
@@ -77,7 +105,7 @@ namespace dbwt.Controllers
             MySqlCommand cmd = con.CreateCommand();
             MySqlTransaction tr = con.BeginTransaction();
             cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE `Loginname` = '" + loginname +"'";
-
+            MySqlDataReader r;
             try
             {
 
@@ -86,7 +114,7 @@ namespace dbwt.Controllers
 
                 cmd.Connection = con;
                 cmd.Transaction = tr;
-                MySqlDataReader r = cmd.ExecuteReader();
+                 r = cmd.ExecuteReader();
 
 
 
@@ -97,34 +125,34 @@ namespace dbwt.Controllers
                 {
                     dup = true;
                 }
-
+                r.Close();
                 if (dup)
                 {
-                    r.Close();
+              
                     tr.Rollback();
                     //   con.Close();
                     ViewData["imv_user"] = true;
                     return View();
                 }
-                r.Close();
+             
                 cmd = con.CreateCommand();
-                cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE `Email` = ''";
+                cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE `Email` = '"+email+"'";
                 r = cmd.ExecuteReader();
                 dup = false;
                 while (r.Read())
                 {
                     dup = true;
                 }
-
+                r.Close();
                 if (dup)
                 {
-                    r.Close();
+                    
                     tr.Rollback();
                     //  con.Close();
                     ViewData["imv_email"] = true;
                     return View();
                 }
-                r.Close();
+              
 
                 string[] pw = PasswordSecurity.PasswordStorage.CreateHash(password).Split(':');
                 //   format: algorithm: iterations: hashSize: salt: hash
@@ -137,23 +165,30 @@ namespace dbwt.Controllers
 
                 if (role == "student")
                 {
-                    cmd.CommandText = "INSERT INTO `dbwt_praktikum`.`FE-Nutzer` (`Nr`, `Aktiv`, `Vorname`, `Nachname`, `Loginname`, `Email`, `Hash`, `Salt`, `Algorythmus`, `Strech`, `LetzterLogin`, `Anlegedatum`, `Benutzerrolle`, `verified`, `admin`) VALUES (NULL, '0', '" + vorname + "', '" + nachname + "', '" + loginname + "', '" + email + "', '" + pw[4] + "', '" + pw[3] + "', 'sha1', '1', CURRENT_TIMESTAMP, '2017-01-23', 'Student', '0', '0');";
+                    cmd.CommandText = "INSERT INTO `dbwt_praktikum`.`FE-Nutzer` (`Nr`, `Aktiv`, `Vorname`, `Nachname`, `Loginname`, `Email`, `Hash`, `Salt`, `Algorythmus`, `Strech`, `LetzterLogin`, `Anlegedatum`, `Benutzerrolle`, `verified`, `admin`) VALUES (NULL, '0', '" + vorname + "', '" + nachname + "', '" + loginname + "', '" + email + "', '" + pw[4] + "', '" + pw[3] + "', 'sha1', '1', CURRENT_TIMESTAMP, '2017-01-23', 'Student', '0', '0');SELECT LAST_INSERT_ID();INSERT INTO `Student`(`Id`, `Matrikelnummer`, `Studiengang`, `FK_Fe-Nutzer`) VALUES (null,'"+matnr+"','"+studgang+"',LAST_INSERT_ID())";
                    
                 }
                 else if (role == "mitarbeiter")
                 {
-                    cmd.CommandText = "INSERT INTO `dbwt_praktikum`.`FE-Nutzer` (`Nr`, `Aktiv`, `Vorname`, `Nachname`, `Loginname`, `Email`, `Hash`, `Salt`, `Algorythmus`, `Strech`, `LetzterLogin`, `Anlegedatum`, `Benutzerrolle`, `verified`, `admin`) VALUES (NULL, '0', '" + vorname + "', '" + nachname + "', '" + loginname + "', '" + email + "', '" + pw[4] + "', '" + pw[3] + "', 'sha1', '1', CURRENT_TIMESTAMP, '2017-01-23', 'Mitarbeiter', '0', '0');";
+                    cmd.CommandText = "INSERT INTO `dbwt_praktikum`.`FE-Nutzer` (`Nr`, `Aktiv`, `Vorname`, `Nachname`, `Loginname`, `Email`, `Hash`, `Salt`, `Algorythmus`, `Strech`, `LetzterLogin`, `Anlegedatum`, `Benutzerrolle`, `verified`, `admin`) VALUES (NULL, '0', '" + vorname + "', '" + nachname + "', '" + loginname + "', '" + email + "', '" + pw[4] + "', '" + pw[3] + "', 'sha1', '1', CURRENT_TIMESTAMP, '2017-01-23', 'Mitarbeiter', '0', '0');INSERT INTO `dbwt_praktikum`.`Mitarbeiter` (`Id`, `Telefonnummer`, `MA-Nummer`, `Büro`, `FK_Fe-Nutzer`) VALUES (NULL, '"+tel+"', '"+mannr+"', '"+buro+ "', LAST_INSERT_ID());";
                   
                 }
                 else {
-                    cmd.CommandText = "INSERT INTO `dbwt_praktikum`.`FE-Nutzer` (`Nr`, `Aktiv`, `Vorname`, `Nachname`, `Loginname`, `Email`, `Hash`, `Salt`, `Algorythmus`, `Strech`, `LetzterLogin`, `Anlegedatum`, `Benutzerrolle`, `verified`, `admin`) VALUES (NULL, '0', '" + vorname + "', '" + nachname + "', '" + loginname + "', '" + email + "', '" + pw[4] + "', '" + pw[3] + "', 'sha1', '1', CURRENT_TIMESTAMP, '2017-01-23', 'Gast', '0', '0');";
+                    cmd.CommandText = "INSERT INTO `dbwt_praktikum`.`FE-Nutzer` (`Nr`, `Aktiv`, `Vorname`, `Nachname`, `Loginname`, `Email`, `Hash`, `Salt`, `Algorythmus`, `Strech`, `LetzterLogin`, `Anlegedatum`, `Benutzerrolle`, `verified`, `admin`) VALUES (NULL, '0', '" + vorname + "', '" + nachname + "', '" + loginname + "', '" + email + "', '" + pw[4] + "', '" + pw[3] + "', 'sha1', '1', CURRENT_TIMESTAMP, '2017-01-23', 'Gast', '0', '0');INSERT INTO `dbwt_praktikum`.`Gast` (`Id`, `Grund`, `Ablauf`, `FK_Fe-Nutzer`) VALUES (NULL, '"+grund+"', '"+ablauf+ "', LAST_INSERT_ID());";
                     
                 }
-                cmd.ExecuteReader();
+                r= cmd.ExecuteReader();
 
                 //TODO
+                while (r.Read())
+                {
+              
+                }
+
 
                 r.Close();
+               
+
                 tr.Commit();
 
 
@@ -162,7 +197,8 @@ namespace dbwt.Controllers
             }
             catch (Exception e)
             {
-           //     con.Close();
+                //     con.Close();
+               // r.Close();
                 tr.Rollback();
          
                 ViewData["imv_email"] = false;

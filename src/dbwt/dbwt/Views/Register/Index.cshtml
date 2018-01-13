@@ -119,6 +119,16 @@
             if (document.getElementById("mannr") != null && "@ViewData["mannr"]" != "") {
                 document.getElementById("mannr").value = "@ViewData["mannr"]";
                 document.getElementById("mannr").readOnly = true;
+            }
+
+             if (document.getElementById("ablauf") != null && "@ViewData["ablauf"]" != "") {
+                document.getElementById("ablauf").value = "@ViewData["ablauf"]";
+                document.getElementById("ablauf").readOnly = true;
+            }
+
+             if (document.getElementById("grund") != null && "@ViewData["grund"]" != "") {
+                 document.getElementById("grund").value = "@ViewData["grund"]";
+                 document.getElementById("grund").readOnly = true;
          }
 
     }
@@ -138,6 +148,11 @@
             fm_string += "<input type='text' name='tel' id='tel' required placeholder='TELEFONNUMMER'/><br />";
             fm_string += "<input type='text' name='buro' id='buro' required placeholder='BURO' /><br />";
             fm_string += "<input type='text' name='mannr' id= 'mannr' required placeholder='MA-NUMMER' /><br />";
+        } else if (_tp == 2) {
+            fm_string += "<input type='hidden' name='role' id='role' value='gast' /><br />";
+            fm_string += "<input type='text' name='grund' id='grund' required placeholder='GRUND'/><br />";
+            fm_string += "<input type='date' name='ablauf' id='ablauf' required placeholder='Ablaufdatum' /><br />";
+
         } else {
             fm_string = "";
         }

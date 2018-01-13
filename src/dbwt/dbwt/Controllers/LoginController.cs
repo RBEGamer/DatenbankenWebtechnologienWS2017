@@ -26,15 +26,113 @@ namespace dbwt.Controllers
                 ViewData["user"] = HttpContext.Session.Get<String>("user");
             }
 
+            
+            MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
+            try
+            {
+                con1.Open();
+
+               MySqlCommand cmd = con1.CreateCommand();
+                if (ViewData["user"] == null) { return View(); }
+                cmd.CommandText = "SELECT * FROM `FE-Nutzer` LEFT JOIN `Mitarbeiter` ON `Mitarbeiter`.`FK_Fe-Nutzer` = `FE-Nutzer`.`Nr` LEFT JOIN `Student` ON `Student`.`FK_Fe-Nutzer` = `FE-Nutzer`.`Nr` WHERE `Loginname`='" + HttpContext.Session.Get<String>("user") + "' LIMIT 1";
+               MySqlDataReader r = cmd.ExecuteReader();
+                bool is_admin = false;
+                while (r.Read())
+                {
+                    ViewData["Benutzerrolle"] = r["Benutzerrolle"];
+                    if ((String)r["Benutzerrolle"] == "Student")
+                    {
+                        ViewData["Studiengang"] = r["Studiengang"];
+                        ViewData["Matrikelnummer"] = r["Matrikelnummer"];
+                    }
+                    else if ((String)r["Benutzerrolle"] == "Mitarbeiter")
+                    {
+                        ViewData["MA-Nummer"] = r["MA-Nummer"];
+                        ViewData["Büro"] = r["Büro"];
+                    }
+
+
+                    HttpContext.Session.Set<bool>("admin", (bool)r["admin"]);
+                    HttpContext.Session.Set<bool>("verified", (bool)r["verified"]);
+                    is_admin = (bool)r["admin"];
+
+
+
+
+
+                    if (!(bool)r["verified"])
+                    {
+                        ViewData["state"] = 4;
+                    }
+
+                    ViewData["lastlogin"] = r["LetzterLogin"];
+
+                }
+                con1.Close();
+                con1.Open();
+                //UPDATE LAST LOGIN
+                cmd.CommandText = "UPDATE `FE-Nutzer` SET `LetzterLogin`=CURRENT_TIMESTAMP WHERE `Loginname`='" + HttpContext.Session.Get<String>("user") + "'";
+                r = cmd.ExecuteReader();
+
+                con1.Close();
+                con1.Open();
+                //LOAD ADMIN TABLE
+                if (is_admin)
+                {
+                    //LIST NOT VERFIFIED
+                    string tout = "<table><tr><th> USERNAME </th><th> ACTION </th></tr>";
+
+                    cmd.CommandText = "SELECT `Loginname`,`Nr` FROM `FE-Nutzer` WHERE `verified` = '0'";
+                    r = cmd.ExecuteReader();
+                    while (r.Read())
+                    {
+                        tout += "<tr><td>" + r["Loginname"].ToString() + "</td><td><form method='post' action='/Login'><input type='hidden' name='userid' value='" + r["Nr"].ToString() + "' /><input type='hidden' value='verify'/><input type='submit' value='VERIFIY USER' /></form></td></tr>";
+                    }
+                    tout += "</table>";
+                    ViewData["table"] = tout;
+                }
+
+
+
+
+
+                con1.Close();
+
+
+
+            }
+            catch (Exception e)
+            {
+            }
+
+
             return View();
         }
 
-
-
+    
 
         [HttpPost]
-        public ActionResult Index(String username, String password, String action)
+        public ActionResult Index(String username, String password, String action, String userid)
         {
+
+            if(action != null && action == "verify" && HttpContext.Session.Get<bool>("admin"))
+            {
+                MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
+                con.Open();
+                MySqlCommand cmd;
+                cmd = con.CreateCommand();
+                cmd.CommandText = "UPDATE `FE-Nutzer` SET `verified`='1' WHERE `Nr` = '"+ userid + "'";
+                MySqlDataReader r = cmd.ExecuteReader();
+                while(r.Read()){
+
+                }
+
+
+
+                    con.Close();
+            }
+
+
             HttpContextNew.set_con(HttpContext);
 
             ViewData["action"] = action;
@@ -151,7 +249,7 @@ namespace dbwt.Controllers
                                     r = cmd.ExecuteReader();
                                     while (r.Read())
                                     {
-                                        tout += "<tr><td>"+ (String)r["Loginname"] + "</td><td><form><input type='hidden' name='userid' value='"+ (String)r["Nr"] + "' /><input type='submit' value='VERIFIY USER' /></form></td></tr>";
+                                        tout += "<tr><td>"+ r["Loginname"].ToString() + "</td><td><form method='post' action='/Login'><input type='hidden' name='userid' value='"+ r["Nr"].ToString() + "' /><input type='hidden' name='action' value='verify'/><input type='submit' value='VERIFIY USER' /></form></td></tr>";
                                     }
                                     tout += "</table>";
                                     ViewData["table"] = tout;
