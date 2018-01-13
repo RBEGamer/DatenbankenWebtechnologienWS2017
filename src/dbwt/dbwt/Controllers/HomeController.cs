@@ -14,6 +14,8 @@ namespace dbwt.Controllers
        
         public IActionResult Index()
         {
+            if (!String.IsNullOrEmpty(HttpContext.Session.Get<String>("user"))){ ViewData["login"] = true; } else { ViewData["login"] = false; }
+
             return View();
         }
 

@@ -26,11 +26,12 @@
                         <div class="col-md-2 col-md-offset-0"> <!-- damit der button nicht rutscht-->
                             <div style="height:50px;">
                                
+                                @if (!(bool)ViewData["login"]){ 
                                     <a href="Register" class="btn btn-primary btn-lg btn-block active" role="button" aria-pressed="true">
                                         <img src="./assets/images/glyphicons_free/glyphicons/png/glyphicons-346-hand-right.png" /> Register
 
                                         </a>
-
+                                }
                             </div>
                         <br />
                             <div style="height:50px;">
@@ -48,7 +49,13 @@
                 <div class="container">
                     <div class="row">
                         <div class="col-md-2">
-                            <p>Registrieren Sie sich @Html.ActionLink("hier", "Index", "Register"), um über die Veröffentlichung des Dienstes per Mail informiert zu werden.</p>
+                            <p>Registrieren Sie sich 
+                                @if (!(bool)ViewData["login"]){
+                                    @Html.ActionLink("hier", "Index", "Register")
+                            } else { 
+                                <p>hier</p>
+                            }
+                            , um über die Veröffentlichung des Dienstes per Mail informiert zu werden.</p>
                         </div>
                         <div class="col-md-10">
                             <img class="img-responsive img-size" src="./assets/images/generic_food_bg.png" alt="our generic mensa food">
