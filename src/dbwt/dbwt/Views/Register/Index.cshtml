@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<h1> REGISTER A NEW AACOUNT</h1>
+
+<div id="mf">
+
+    <fieldset>
+        <input type="radio" id="mc" name="regtype" value="0" onchange="load_form(0)" checked>
+        <label for="mc"> Student</label>
+        <input type="radio" id="vi" name="regtype" value="1" onchange="load_form(1)">
+        <label for="vi"> Mitarbeiter</label>
+        <input type="radio" id="gi" name="regtype" value="2" onchange="load_form(2)">
+        <label for="gi"> Gast</label>
+    </fieldset>
+
+
+
+
+    <form method="post" action="/Register">
+
+
+
+
+        <br />
+        @if (ViewData["imv_user"] != null && (bool)ViewData["imv_user"])
+        {
+            <p>ALREADY GIVEN USERNAME</p>
+        }
+        <input type="text" name="loginname" id="loginname" required placeholder="USERNAME" /><br />
+        <input type="text" name="vorname" id="vorname" required placeholder="Vorname" /><br />
+        <input type="text" name="nachname" id="nachname" required placeholder="Nachname" /><br />
+        @if (ViewData["imv_email"] != null && (bool)ViewData["imv_email"])
+        {
+            <p>ALREADY GIVEN EMAIL</p>
+        }
+        <input type="email" name="email" id="email" required placeholder="E-Mail" /><br />
+
+
+        <input type="password" name="password" id="password" required placeholder="PASSWORD" /><br />
+        <input type="password" name="password_wdh" id="password_wdh" required placeholder="PASSWORD WDH" /><br />
+
+        <div id="spfm">
+
+
+        </div>
+
+
+        <input type="submit" value="REGISTRIEREN" />
+    </form>
+</div>
+
+
+
+
+
+
+
+
+
+<script>
+
+
+
+
+    function chi() {
+        if ("@ViewData["req_ok"]" == "True") {
+            document.getElementById("mf").innerHTML = "<h1> Registrierung ERFOLGREICH</h1>";
+        }
+
+
+
+        if (document.getElementById("loginname") != null && "@ViewData["loginname"]" != "" && "@ViewData["imv_user"]" == "False") {
+            document.getElementById("loginname").value = "@ViewData["loginname"]";
+            document.getElementById("loginname").readOnly = true;
+        }
+         if (document.getElementById("vorname") != null && "@ViewData["vorname"]" != "") {
+            document.getElementById("vorname").value = "@ViewData["vorname"]";
+            document.getElementById("vorname").readOnly = true;
+        }
+         if (document.getElementById("nachname") != null && "@ViewData["nachname"]" != "") {
+            document.getElementById("nachname").value = "@ViewData["nachname"]";
+            document.getElementById("nachname").readOnly = true;
+         }
+         if (document.getElementById("email") != null && "@ViewData["email"]" != "" && "@ViewData["imv_email"]" == "False") {
+            document.getElementById("email").value = "@ViewData["email"]";
+            document.getElementById("email").readOnly = true;
+         }
+         if (document.getElementById("password") != null && "@ViewData["password"]" != "") {
+            document.getElementById("password").value = "@ViewData["password"]";
+            document.getElementById("password").readOnly = true;
+         }
+         if (document.getElementById("password_wdh") != null && "@ViewData["password_wdh"]" != "") {
+            document.getElementById("password_wdh").value = "@ViewData["password_wdh"]";
+            document.getElementById("password_wdh").readOnly = true;
+         }
+
+         if (document.getElementById("matnr") != null && "@ViewData["matnr"]" != "") {
+             document.getElementById("matnr").value = "@ViewData["matnr"]";
+             document.getElementById("matnr").readOnly = true;
+         }
+
+         if (document.getElementById("studgang") != null && "@ViewData["studgang"]" != "") {
+             document.getElementById("studgang").value = "@ViewData["studgang"]";
+             document.getElementById("studgang").readOnly = true;
+         }
+
+            if (document.getElementById("tel") != null && "@ViewData["tel"]" != "") {
+                document.getElementById("tel").value = "@ViewData["tel"]";
+                document.getElementById("tel").readOnly = true;
+         }
+
+            if (document.getElementById("buro") != null && "@ViewData["buro"]" != "") {
+                document.getElementById("buro").value = "@ViewData["buro"]";
+                document.getElementById("buro").readOnly = true;
+         }
+
+            if (document.getElementById("mannr") != null && "@ViewData["mannr"]" != "") {
+                document.getElementById("mannr").value = "@ViewData["mannr"]";
+                document.getElementById("mannr").readOnly = true;
+         }
+
+    }
+
+
+
+    function load_form(_tp) {
+
+        var fm_string = "";
+
+        if (_tp == 0) {
+            fm_string += "<input type='hidden' name='role' id='role' value='student' /><br />";
+            fm_string += "<input type='text' name='matnr' id='matnr' required placeholder='MATRIKELNUMMER' /><br />";
+            fm_string += "<input type='text' name='studgang' id='studgang' required placeholder='STUDIENGANG' /><br />";
+        } else if (_tp == 1) {
+            fm_string += "<input type='hidden' name='role' id='role' value='mitarbeiter' /><br />";
+            fm_string += "<input type='text' name='tel' id='tel' required placeholder='TELEFONNUMMER'/><br />";
+            fm_string += "<input type='text' name='buro' id='buro' required placeholder='BURO' /><br />";
+            fm_string += "<input type='text' name='mannr' id= 'mannr' required placeholder='MA-NUMMER' /><br />";
+        } else {
+            fm_string = "";
+        }
+        document.getElementById("spfm").innerHTML = fm_string;
+        chi();
+    }
+
+
+    load_form(0)
+</script>

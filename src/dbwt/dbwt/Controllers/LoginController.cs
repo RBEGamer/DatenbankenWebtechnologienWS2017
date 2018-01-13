@@ -92,7 +92,7 @@ namespace dbwt.Controllers
                             HttpContext.Session.Set<bool>("verified",false);
                             //-------------------------------------------------------------------------------------------------------------------------------------------------
 
-
+                            bool is_admin = false;
 
                             try
                             {
@@ -119,19 +119,10 @@ namespace dbwt.Controllers
 
                                     HttpContext.Session.Set<bool>("admin", (bool)r["admin"]);
                                     HttpContext.Session.Set<bool>("verified", (bool)r["verified"]);
+                                    is_admin = (bool)r["admin"];
 
 
-
-                                    if ((bool)r["admin"])
-                                    {
-                                        //LIST NOT VERFIFIED
-                                        string tout = "<table><tr><th> USERNAME </th><th> ACTION </th></tr>";
-
-                                        tout += "<tr><td>USERNAME</td><td><form><input type='hidden' name='userid' value='1' /><input type='submit' value='VERIFIY USER' /></form></td></tr>";
-
-                                        tout += "</table>";
-                                        ViewData["table"] = tout;
-                                    }
+                                   
 
 
                                     if (!(bool)r["verified"])
@@ -140,20 +131,39 @@ namespace dbwt.Controllers
                                     }
 
                                     ViewData["lastlogin"] = r["LetzterLogin"];
-                                    //UPDATE `FE-Nutzer` SET `LetzterLogin`=CURRENT_TIMESTAMP WHERE `Loginname`='dbwt'
-                                    //TODO ADMIN STUFF HERE
+                           
                                 }
-
+                                con1.Close();
+                                con1.Open();
                                 //UPDATE LAST LOGIN
                                 cmd.CommandText = "UPDATE `FE-Nutzer` SET `LetzterLogin`=CURRENT_TIMESTAMP WHERE `Loginname`='"+username+"'";
                                 r = cmd.ExecuteReader();
+
+                                con1.Close();
+                                con1.Open();
+                                //LOAD ADMIN TABLE
+                                if (is_admin)
+                                {
+                                    //LIST NOT VERFIFIED
+                                    string tout = "<table><tr><th> USERNAME </th><th> ACTION </th></tr>";
+
+                                    cmd.CommandText = "SELECT `Loginname`,`Nr` FROM `FE-Nutzer` WHERE `verified` = '0'";
+                                    r = cmd.ExecuteReader();
+                                    while (r.Read())
+                                    {
+                                        tout += "<tr><td>"+ (String)r["Loginname"] + "</td><td><form><input type='hidden' name='userid' value='"+ (String)r["Nr"] + "' /><input type='submit' value='VERIFIY USER' /></form></td></tr>";
+                                    }
+                                    tout += "</table>";
+                                    ViewData["table"] = tout;
+                                }
+
+
+
 
 
                                 con1.Close();
 
 
-
-                                //UPDATE `FE-Nutzer` SET `LetzterLogin`=CURRENT_TIMESTAMP WHERE `Loginname`='dbwt'
 
                             }
                             catch (Exception e)

@@ -25,19 +25,22 @@ namespace dbwt.Controllers
             try
             {  /*TODO PFAD FIXEN   */
 
+                String username = "";
+               username =  HttpContext.Session.Get<String>("user");
 
-
-
+               
                 var document = XDocument.Load(@"HIER PFAD ZUR XML");
                 XElement root = document.Root; // Wurzelelement
-                var menu = from e in root.Descendants("Menu") where (int)(Convert.ToDateTime(e.Attribute("Tag").Value).DayOfWeek) == weekday select e;
-                var kw = (from e in root.Descendants("Menu") where (int)(Convert.ToDateTime(e.Attribute("Tag").Value).DayOfWeek) == weekday select e.Attribute("Kalenderwoche")).ToList()[0].Value.ToString();
+                var menu = from e in root.Descendants("Menu") where (int)(Convert.ToDateTime(e.Attribute("Tag").Value).DayOfWeek) == (int)DateTime.Today.DayOfWeek select e;
+                var kw = (from e in root.Descendants("Menu") where (int)(Convert.ToDateTime(e.Attribute("Tag").Value).DayOfWeek) == (int)DateTime.Today.DayOfWeek select e.Attribute("Kalenderwoche")).ToList()[0].Value.ToString();
                 var motto = (from e in menu.Elements() select e).ToList()[0].Value.ToString();
                 var produkte = (from e in menu.Descendants("Produkte").Descendants("Produkt") select e).ToList();
 
 
                 neuesMenue.Motto = motto.ToString();
-                neuesMenue.
+                neuesMenue.KW = int.Parse(kw);
+                //neuesMenue.Produkte = produkte;
+               
 
 
                 for (int i = 0; i < produkte.Count(); i++)
@@ -46,13 +49,14 @@ namespace dbwt.Controllers
                     Convert.ToString(produkte[i].Attribute("ProduktID").Value);
 
 
-                    MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhabe
+                    //MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhabe
 
-                    con1.Open();
-                    MySqlCommand cmd;
-                    cmd = con1.CreateCommand();
-                    cmd.CommandText = "SELECT * FROM `Produkte` WHERE `Loginname`='" + username + "' LIMIT 1";
-                    MySqlDataReader r = cmd.ExecuteReader();
+                    //con1.Open();
+                    //MySqlCommand cmd;
+                    //cmd = con1.CreateCommand();
+                    //cmd.CommandText = "SELECT * FROM `Produkte` WHERE `Loginname`='" + username + "' LIMIT 1";
+                    //MySqlDataReader 
+                    //    r = cmd.ExecuteReader();
 
 
 
@@ -95,7 +99,7 @@ namespace dbwt.Controllers
 
 
 
-
+            return neuesMenue;
         }
 
 
