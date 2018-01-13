@@ -55,7 +55,7 @@ namespace dbwt.Controllers
                     HttpContext.Session.Set<bool>("admin", (bool)r["admin"]);
                     HttpContext.Session.Set<bool>("verified", (bool)r["verified"]);
                     is_admin = (bool)r["admin"];
-
+                    ViewData["admin"] = (bool)r["admin"];
 
 
 
@@ -251,9 +251,10 @@ namespace dbwt.Controllers
                                     HttpContext.Session.Set<bool>("admin", (bool)r["admin"]);
                                     HttpContext.Session.Set<bool>("verified", (bool)r["verified"]);
                                     is_admin = (bool)r["admin"];
+                                    ViewData["admin"] = (bool)r["admin"];
 
 
-                                   
+
 
 
                                     if (!(bool)r["verified"])

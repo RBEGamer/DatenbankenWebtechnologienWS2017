@@ -10,14 +10,18 @@
 @using Microsoft.AspNetCore.Builder
 @{
 
- ViewData["Title"] = "LOGIN";
-
+    ViewData["Title"] = "LOGIN";
+      if (ViewData["admin"] != null && (bool)ViewData["admin"])
+    {
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+  
+   }
 
 
 
 
     ViewData["Title"] = "Mensa Order System | Login";
-    if(ViewData["state"] == null)
+    if (ViewData["state"] == null)
     {
         <h1>ERROR</h1>
         return;
@@ -100,7 +104,12 @@
              @Html.Raw(ViewData["table"]);
         }
 
-        //TODO ADMIN STUFF HERE
+
+
+       
+
+
+            //TODO ADMIN STUFF HERE
 
                 <br /><br />
              <form action="Login" method="post">

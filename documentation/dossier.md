@@ -293,3 +293,18 @@ FLUSH PRIVILEGES;``
 #### Dokumentieren Sie, was das GRANT Recht ermöglicht und ob Sie es für sinnvoll erachten. Stellen Sie auch sicher, dass der Nutzer webapp ausschließlich die Rechte auf der oben angesprochenen Datenbank besitzt!
 
 Grant erlaubt es dem Benutzer die Rechte anderer Nutzen der Datenbank zu ändern. Dies ist im vorliegenden Fall nicht sinnvoll, es wäre dann von Nutzen wenn man einen ‘Verwaltungsuser’ schaffen wollte dessen Aufgabe explizit die Verwaltung anderer User ist.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+6.2 Die Kriterien für Anmeldungen der Art "Backend" sind nicht fest vorgegeben gewesen, daher wählen Sie einen der genannten Vorschläge oder machen einen eigenen

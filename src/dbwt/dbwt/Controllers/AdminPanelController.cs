@@ -10,10 +10,16 @@ namespace dbwt.Controllers
 {
     public class AdminPanelController : Controller
     {
-        public IActionResult FeNutzerData(String id)
+
+       // public ActionResult FeNutzer()
+        //{
+          //  var model = repository.GetThingByParameter(parameter1);
+          //  var partialViewModel = new PartialViewModel(model);
+          //  return PartialView(partialViewModel);
+        //}
+
+        public ActionResult Index()
         {
-
-
 
             ViewData["Title"] = "Administration";
             MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
@@ -29,15 +35,7 @@ namespace dbwt.Controllers
             {
                 ViewData["role"] = "Gast";
             }
-            if (id != null)
-            {
-                ViewData["prodid"] = id.ToString();
-            }
-            else
-            {
-                //TODO SET HEADER
-                // @Html.Raw("<script>alert('FEHLENDER PARAMETER')</script>");
-            }
+
 
 
             try
@@ -46,43 +44,38 @@ namespace dbwt.Controllers
                 MySqlCommand cmd;
                 cmd = con1.CreateCommand();
 
-                if (ViewData["prodid"] == null)
-                {
 
-                    ViewData["header_addition"] = "<meta http-equiv=\"refresh\" content=\"3; url=/\"/>";
-                    return View();
-                }
 
                 String cmdb = "SELECT * FROM `FENUTZER` WHERE `verified`==0 order by Anlegedatum asc";
 
 
                 cmd.CommandText = cmdb;
                 MySqlDataReader r = cmd.ExecuteReader();
-              
+
                 while (r.Read())
                 {
                     FeNutzer nutzer = new FeNutzer();
-                    
+
                     nutzer.CreatedOnDate = (DateTime)r["Anlegedatum"];
                     nutzer.isAdmin = (bool)r["admin"];
                     nutzer.isVerified = (bool)r["verified"];
                     nutzer.LastLogin = (DateTime)r["LetzterLogin"];
-                    nutzer.NameWithEmail = (string)r["Login-Name"]+ (String)r["E-Mail"];
+                    nutzer.NameWithEmail = (string)r["Login-Name"] + (String)r["E-Mail"];
                     nutzer.Rolle = (string)r["Benutzerrolle"];
                     nutzer.FeUserID = (int)r["Nr"];
 
                     newRegistered.Add(nutzer);
-                    
+
                 }
 
-                
+
 
                 cmdb = "SELECT * FROM `FENUTZER` WHERE `verified`==1 order by lastLogin asc limit 20";
 
 
                 cmd.CommandText = cmdb;
                 MySqlDataReader result2 = cmd.ExecuteReader();
-                
+
                 while (r.Read())
                 {
                     FeNutzer nutzer = new FeNutzer();
@@ -109,10 +102,13 @@ namespace dbwt.Controllers
 
             catch (Exception e)
             {
-                
+
             }
 
-            return View();
+            return PartialView();
+
+
+
         }
     }
 }

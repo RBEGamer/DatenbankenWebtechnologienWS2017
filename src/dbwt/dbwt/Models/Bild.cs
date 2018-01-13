@@ -17,5 +17,7 @@ namespace dbwt.Models
 
         public byte bild { get; set; }
 
+        public string img_path { get; set; }
+
     }
 }
