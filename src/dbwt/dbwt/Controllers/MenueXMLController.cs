@@ -27,7 +27,13 @@ namespace dbwt.Controllers
             Dictionary<string, Produkt> Produkte = new Dictionary<string, Produkt>();
             List<Produkt> ret = new List<Produkt>();
             /*Auslesen des XML und Speichern in einer Liste mit Menü Objekten*/
-
+             
+           foreach (var prod in men.Produkte )
+            {
+                Produkt newProdukt = new Produkt();
+                newProdukt.pid = prod.ID;
+                ret.Add(newProdukt);
+            }
 
             try
             {  
