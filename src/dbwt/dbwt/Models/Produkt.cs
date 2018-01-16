@@ -21,7 +21,7 @@ namespace dbwt.Models
     }
     public class Produkt
     {
-        public int pid { get; set; }
+        public int Id { get; set; }
         public bool vegan { get; set; }
 
         public bool vegetarisch { get; set; }

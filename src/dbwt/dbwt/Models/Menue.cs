@@ -15,7 +15,7 @@ namespace dbwt.Models
 
         public Dictionary<string,Produkt> Produkte { get; set; }
 
-        public Bild highlight { get; set; }
+        public String Highlight { get; set; }
 
     }
 }

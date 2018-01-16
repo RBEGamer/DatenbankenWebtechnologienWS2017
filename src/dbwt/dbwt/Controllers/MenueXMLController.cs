@@ -13,27 +13,26 @@ namespace dbwt.Controllers
     public class MenueXMLController : Controller
     {
 
-        public List<Produkt> ParseMenueFromXML(){
+        public MenuList ParseMenueFromXML(){
 
             XMLFactory xml = new XMLFactory();
 
             MenuList men = xml.getMenuList();
-
-           
-
-            Menue neuesMenue = new Menue();
+            MenuList res = new MenuList();
 
 
-            Dictionary<string, Produkt> Produkte = new Dictionary<string, Produkt>();
-            List<Produkt> ret = new List<Produkt>();
+
+
+
+
             /*Auslesen des XML und Speichern in einer Liste mit Menü Objekten*/
-             
-           foreach (var prod in men.Produkte )
-            {
-                Produkt newProdukt = new Produkt();
-                newProdukt.pid = prod.ID;
-                ret.Add(newProdukt);
-            }
+
+            //foreach (var prod in men.Produkte )
+            // {
+            //     Produkt newProdukt = new Produkt();
+            //     newProdukt.pid = prod.ID;
+            //     ret.Add(newProdukt);
+            // }
 
             try
             {  
@@ -44,58 +43,66 @@ namespace dbwt.Controllers
 
 
 
-                Produkt p = new Produkt();
-                p.Beschreibung = "Toll";
-                p.vegan = false;
-                p.vegetarisch = false;
-                p.Typ = "Tellergericht";
-                p.pid = 1;
-                Produkte.Add(p.pid.ToString(), p);
-
-                p.Beschreibung = "Toll";
-                p.vegan = false;
-                p.Typ = "Tellergericht";
-                p.vegetarisch = false;
-                p.pid = 2;
-                Produkte.Add(p.pid.ToString(), p);
-
-                p.Beschreibung = "Toll";
-                p.vegan = false;
-                p.Typ = "Tellergericht";
-                p.vegetarisch = false;
-                p.pid = 3;
-                Produkte.Add(p.pid.ToString(), p);
+           
 
 
                 MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhabe
                 con1.Open();
                 MySqlCommand cmd;
-
-
-
-        
-
-
-
-                foreach (KeyValuePair<string, Produkt> entry in Produkte)
-                {
+                String img_path = "";
+                if (men.Highlight >= 0) {
+                    //GET IMAGE
+                    try
+                    {
                     cmd = con1.CreateCommand();
-                    cmd.CommandText = "SELECT `Gastbetrag`,`Studentenbetrag`,`Mitarbeiterbetrag`, `Produkt`.`Id` AS `Id`, `Bild`.`DetailsBildPfad`, `Beschreibung`, `Produkt`.`Titel` FROM `Produkt` LEFT JOIN `Preis` ON `Preis`.`Id` = `Produkt`.`FK_Preis` LEFT JOIN `Bild` ON `Bild`.`Id` = `Produkt`.`FK_Bild` WHERE `Produkt`.`Id`='" + entry.Value.pid + "' LIMIT 1";
+                    cmd.CommandText = "SELECT * FROM `Bild` WHERE `Id` = '"+ men.Highlight.ToString()+ "' LIMIT 1";
                     MySqlDataReader r = cmd.ExecuteReader();
 
                     while (r.Read())
                     {
-                        Produkt tmp = entry.Value;
-                        tmp.Titel = (String)r["Titel"];       
-                        tmp.preis = new Preis(r["Studentenbetrag"].ToString(), r["Gastbetrag"].ToString(), r["Mitarbeiterbetrag"].ToString());
-                        tmp.Beschreibung = r["Beschreibung"].ToString();
-                        tmp.Bilder = new List<Bild>();
-                        tmp.Bilder.Add(new Bild((String)r["DetailsBildPfad"]));
-                        ret.Add(tmp);
-                        break;
+                        img_path = r["DetailsBildPfad"].ToString();
+                    }
+                    }
+                    catch (Exception)
+                    {
+
+                 
+                    }
+                }
+                men.Image = img_path;
+
+                // res = men;
+                res.Highlight = men.Highlight;
+                res.Image = men.Image;
+                res.Motto = men.Motto;
+                res.Produkte = new List<MenuList.MenuProdukt>();
+                res.Produkte.Clear();
+
+                for (int i = 0; i < men.Produkte.Count; i++) {
+                    cmd = con1.CreateCommand();
+                    cmd.CommandText = "SELECT `Gastbetrag`,`Studentenbetrag`,`Mitarbeiterbetrag`, `Produkt`.`Id` AS `Id`, `Bild`.`DetailsBildPfad`, `Beschreibung`, `Produkt`.`Titel` FROM `Produkt` LEFT JOIN `Preis` ON `Preis`.`Id` = `Produkt`.`FK_Preis` LEFT JOIN `Bild` ON `Bild`.`Id` = `Produkt`.`FK_Bild` WHERE `Produkt`.`Id`='" + men.Produkte[i].ID + "' LIMIT 1";
+                    MySqlDataReader r = cmd.ExecuteReader();
+
+                    while (r.Read())
+                    {
+                        MenuList.MenuProdukt tmp = new MenuList.MenuProdukt();
+                        tmp.ID = men.Produkte[i].ID;
+                       tmp.Typ = men.Produkte[i].Typ;
+                        tmp.Vegan = men.Produkte[i].Vegan;
+                        tmp.Vegetarisch = men.Produkte[i].Vegetarisch;
+
+                        tmp.preis = new MenuList.MenuProdukt.Preis(r["Studentenbetrag"].ToString(), r["Mitarbeiterbetrag"].ToString(), r["Gastbetrag"].ToString());
+                       tmp.Beschreibung = r["Beschreibung"].ToString();
+                        tmp.Name = r["Titel"].ToString();
+                        res.Produkte.Add(tmp);
                     }
                     r.Close();
+
+
+
                 }
+
+              
 
             }
             catch (Exception e)
@@ -105,7 +112,7 @@ namespace dbwt.Controllers
 
 
 
-            return ret;
+            return res;
         }
 
 
@@ -114,16 +121,28 @@ namespace dbwt.Controllers
 
 
 
-            List<Produkt> m = ParseMenueFromXML();
+            MenuList m = ParseMenueFromXML();
+            //TODO TO 
+
+            if (m.Image == "")
+            {
+                ViewData["img_path"] = "default.png";
+            }
+            else
+            {
+                ViewData["img_path"] = m.Image;
+            }
 
 
-            
-            ViewData["img_path"] = "default.png";
             String tbl_string = "<table width='100%'><tr><th>TYP</th><th>Mahltzeit</th><th>Preis</th></tr>";
 
 
+            try
+            {
 
-            for (int i = 0; i < m.Count(); i++)
+            
+
+            for (int i = 0; i < m.Produkte.Count(); i++)
             {
 
                 String preis = "-- bitte erfragen --";
@@ -131,23 +150,28 @@ namespace dbwt.Controllers
 
                 if (!String.IsNullOrEmpty(HttpContext.Session.Get<String>("role")) && HttpContext.Session.Get<String>("role") == "Student")
                 {
-                    preis = m[i].preis.Studentenbetrag.ToString() + "€";
+                    preis = m.Produkte[i].preis.Studentenbetrag.ToString() + "€";
                 }
-                
+
                 else if (!String.IsNullOrEmpty(HttpContext.Session.Get<String>("role")) && HttpContext.Session.Get<String>("role") == "Mitarbeiterbetrag")
                 {
-                    preis = m[i].preis.Mitarbeiterbetrag.ToString() + "€";
+                    preis = m.Produkte[i].preis.Mitarbeiterbetrag.ToString() + "€";
                 }
                 else
                 {
-                    preis = m[i].preis.Gastbeitrag.ToString() + "€";
+                    preis = m.Produkte[i].preis.Gastbeitrag.ToString() + "€";
                 }
 
 
-                    tbl_string += "<tr><td>" + m[i].Typ.ToString() + "</td><td><p><b>" + m[i].Titel.ToString() + "</b></p><br><p>" + m[i].Beschreibung.ToString() + "</p></td><td>" + preis + "</td></tr>";
+                tbl_string += "<tr><td>" + m.Produkte[i].Typ.ToString() + "</td><td><p><b>" + m.Produkte[i].Name.ToString() + "</b></p><br><p>" + m.Produkte[i].Beschreibung.ToString() + "</p></td><td>" + preis + "</td></tr>";
 
             }
+        }
+               catch (Exception)
+            {
 
+             
+            }
 
 
             tbl_string += "</table>";
