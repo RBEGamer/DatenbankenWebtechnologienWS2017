@@ -9,7 +9,7 @@ namespace dbwt
 {
     public class XMLFactory
     {
-        string XMLFILE = ("./Speiseplan.xml");
+        string XMLF = ("./Speiseplan.xml");
         private XElement root;
 
         private bool open()
@@ -18,7 +18,7 @@ namespace dbwt
 
             try
             {
-                var document = XDocument.Load(@XMLFILE);
+                var document = XDocument.Load(@XMLF);
                 root = document.Root;
 
                 System.Diagnostics.Debug.WriteLine("ok");

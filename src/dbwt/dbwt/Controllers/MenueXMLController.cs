@@ -15,30 +15,27 @@ namespace dbwt.Controllers
 
         public List<Produkt> ParseMenueFromXML(){
 
+            XMLFactory xml = new XMLFactory();
+
+            MenuList men = xml.getMenuList();
+
+           
 
             Menue neuesMenue = new Menue();
+
 
             Dictionary<string, Produkt> Produkte = new Dictionary<string, Produkt>();
             List<Produkt> ret = new List<Produkt>();
             /*Auslesen des XML und Speichern in einer Liste mit Menü Objekten*/
 
+
             try
-            {  /*TODO PFAD FIXEN   */
-
-                String username = "";
-               username =  HttpContext.Session.Get<String>("user");
-
-//                  var document = XDocument.Load("https://pastebin.com/raw/G7QV5Sz6");
-  //              XElement root = document.Root; // Wurzelelement
-               // var menu = from e in root.Descendants("Menu") select e; //where (int)(Convert.ToDateTime(e.Attribute("Tag").Value).DayOfWeek) == (int)DateTime.Today.DayOfWeek select e;
-               // var kw = (from e in root.Descendants("Menu") where (int)(Convert.ToDateTime(e.Attribute("Tag").Value).DayOfWeek) == (int)DateTime.Today.DayOfWeek select e.Attribute("Kalenderwoche")).ToList()[0].Value.ToString();
-               // var motto = (from e in menu.Elements() select e).ToList()[0].Value.ToString();
-               // var produkte = (from e in menu.Descendants("Produkte").Descendants("Produkt") select e).ToList();
+            {  
 
 
-            //    neuesMenue.Motto = motto.ToString();
-             //   neuesMenue.KW = int.Parse(kw);
-                //neuesMenue.Produkte = produkte;
+
+
+
 
 
                 Produkt p = new Produkt();
