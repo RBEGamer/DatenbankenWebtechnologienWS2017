@@ -19,37 +19,15 @@ namespace dbwt.Controllers
         {
             RegistrationData regdata = new RegistrationData();
             ViewData["imv_email"] = false;
+            regdata.imv_email = false;
             ViewData["imv_user"] = false;
+            regdata.imv_user = false;
             ViewData["req_ok"] = false;
+            regdata.req_ok = false;
             return View(regdata);
         }
 
 
-        [HttpGet]
-        public ActionResult Index(String d)
-        {
-            RegistrationData regdata = new RegistrationData();
-            if (!String.IsNullOrEmpty(d)) {
-            ViewData["req_ok"] = false;
-            ViewData["loginname"] = "testuser";
-            ViewData["vorname"] = "test";
-            ViewData["nachname"] = "user";
-            ViewData["email"] = "test@test.de";
-            ViewData["role"] = "student";
-            ViewData["studgang"] = "LOOOOL";
-            ViewData["tel"] = "1337";
-            ViewData["buro"] = "KEIN";
-            ViewData["mannr"] = "424242";
-            ViewData["password"] = "1234";
-            ViewData["password_wdh"] = "1234";
-            ViewData["imv_email"] = false;
-            ViewData["imv_user"] = false;
-                ViewData["grund"] = "Ich bin ein teichfisch";
-                ViewData["ablauf"] = "2019-01-23";
-            }
-
-            return View(regdata);
-        }
 
 
 
@@ -60,36 +38,56 @@ namespace dbwt.Controllers
             RegistrationData regdata = new RegistrationData();
 
             ViewData["req_ok"] = false;
+            regdata.req_ok = false;
             ViewData["loginname"] = loginname;
+            regdata.loginname = loginname;
             ViewData["vorname"] = vorname;
+            regdata.vorname = vorname;
             ViewData["nachname"] = nachname;
+            regdata.nachname = nachname;
             ViewData["email"] = email;
+            regdata.email = email;
             ViewData["role"] = role;
+            regdata.role = role;
             ViewData["studgang"] = studgang;
+            regdata.studgang = studgang;
             ViewData["tel"] = tel;
+            regdata.tel = tel;
             ViewData["buro"] = buro;
+            regdata.buro = buro;
             ViewData["mannr"] = mannr;
+            regdata.mannr = mannr;
             ViewData["grund"] = grund;
+            regdata.grund = grund;
             ViewData["ablauf"] = ablauf;
+            regdata.ablauf = ablauf;
             ViewData["imv_email"] = false;
+            regdata.imv_email = false;
             ViewData["imv_user"] = false;
+            regdata.imv_user = false;
 
             if (password != "" && password_wdh == password)
             {
                 ViewData["password"] = password;
                 ViewData["password_wdh"] = password_wdh;
+                regdata.password = password;
+                regdata.password_wdh = password_wdh;
             }
             else
             {
                 ViewData["password"] = "";
                 ViewData["password_wdh"] = "";
-                return View();
+                regdata.password = "";
+                regdata.password_wdh = "";
+                return View(regdata);
             }
 
 
 
             ViewData["imv_email"] = false;
+            regdata.imv_email = false;
             ViewData["imv_user"] = false;
+            regdata.imv_user = false;
 
 
             MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhaben
@@ -126,6 +124,7 @@ namespace dbwt.Controllers
                     tr.Rollback();
                     //   con.Close();
                     ViewData["imv_user"] = true;
+                    regdata.imv_user = true;
                     return View();
                 }
              
@@ -144,6 +143,7 @@ namespace dbwt.Controllers
                     tr.Rollback();
                     //  con.Close();
                     ViewData["imv_email"] = true;
+                    regdata.imv_email = true;
                     return View();
                 }
               
@@ -197,11 +197,14 @@ namespace dbwt.Controllers
          
                 ViewData["imv_email"] = false;
                 ViewData["imv_user"] = false;
+                regdata.imv_user = false;
+                regdata.imv_email = false;
                 return View();
             }
             con.Close();
 
             ViewData["req_ok"] = true;
+            regdata.req_ok = true;
             return View(regdata);
         }
 

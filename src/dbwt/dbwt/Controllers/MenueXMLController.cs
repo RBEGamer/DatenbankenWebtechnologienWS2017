@@ -103,13 +103,13 @@ namespace dbwt.Controllers
 
             if (m.Image == "")
             {
-                ViewData["img_path"] = "default.png";
+                ViewData["img_path"] = "defaultbig.png";
             }
             else
             {
                 ViewData["img_path"] = m.Image;
             }
-            String tbl_string = "<table width='100%'><tr><th>TYP</th><th>Mahltzeit</th><th>Preis</th></tr>";
+            String tbl_string = "<table class='table table-dark'><thead><tr><th>TYP</th><th>Mahltzeit</th><th>Preis</th></tr></thead><tbody>";
             try
             {
 
@@ -142,7 +142,7 @@ namespace dbwt.Controllers
             }
 
 
-            tbl_string += "</table>";
+            tbl_string += "<tbody></table>";
             ViewData["table"] = tbl_string;
             return View();
         }
