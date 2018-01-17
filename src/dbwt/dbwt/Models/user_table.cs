@@ -12,6 +12,7 @@ namespace dbwt.Models
         public string time { get; set; }
 
         public string username { get; set; }
+        public string role { get; set; }
     }
 
 
