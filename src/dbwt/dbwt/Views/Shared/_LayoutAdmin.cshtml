@@ -54,7 +54,7 @@
 
                             <div class="container text-center">
                                 <ul class="list-inline">
-                                    <li class="list-inline-item">@Html.ActionLink("Administration", "AdminPanel", "Admin")</li>
+                                    <li class="list-inline-item">@Html.ActionLink("Administration", "Index", "AdminPanel")</li>
                                     <li class="list-inline-item">@Html.ActionLink("Home", "Index", "Home")</li>
                                     <li class="list-inline-item solid_list">@Html.ActionLink("Produkte", "Index", "Produkte")</li>
                                     <li class="list-inline-item solid_list">@Html.ActionLink("Bestellung", "Index", "Home")</li>
@@ -83,7 +83,7 @@
 
     <!-- MAIN BODY START-->
 
-    @RenderBody();
+    @RenderBody()
 
     <!-- MAIN BODY END-->
     <footer>
@@ -97,6 +97,7 @@
                     <div class="container text-center">
                         <ul class="list-inline">
                             <li class="list-inline-item"><a href="Login" class="fh_link">Login </a></li>
+                            <li class="list-inline-item solid_list">@Html.ActionLink("AdminPanel", "Index", "AdminPanel")</li>
                             <li class="list-inline-item solid_list">@Html.ActionLink("Register", "Index", "Home")</li>
                             <li class="list-inline-item solid_list">@Html.ActionLink("Zutaten", "Index", "Home")</li>
                             <li class="list-inline-item solid_list">@Html.ActionLink("Impressum", "Index", "Impressum")</li>

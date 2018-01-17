@@ -7,18 +7,21 @@ namespace dbwt.Models
 {
     public class FeNutzer
     {
-        public DateTime CreatedOnDate { get; set; }
-      
-        public string NameWithEmail { get; set; }
+        public int Nr { get; set; }
+        public bool Aktiv { get; set; }
+        public string Vorname { get; set; }
+        public string Nachname { get; set; }
+        public string Loginname { get; set; }
+        public string Email { get; set; }
+        public string Hash { get; set; }
+        public string Salt { get; set; }
+        public string Algorythmus { get; set; }
+        public int Strech { get; set; }
+        public string LetzterLogin { get; set; }
+        public string Anlegedatum { get; set; }
+        public string Benutzerrolle { get; set; }
+        public bool verified { get; set; }
+        public bool admin { get; set; }
 
-        public DateTime LastLogin { get; set; }
-
-        public bool isAdmin { get; set; }
-
-        public bool isVerified { get; set; }
-
-        public String Rolle { get; set; }
-
-        public int FeUserID { get; set; }
     }
 }

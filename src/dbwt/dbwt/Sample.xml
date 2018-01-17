@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<FE-Nutzer>
+  <Nutzer Nr="1" Aktiv="True" Vorname="Marcel" Nachname="Ochsendorf" Email="marcel.ochsendorf@gmail.com" />
+  <Nutzer Nr="8" Aktiv="False" Vorname="test" Nachname="user" Email="test@test.de" />
+  <Nutzer Nr="12" Aktiv="False" Vorname="test" Nachname="user" Email="213123@rret.de" />
+  <Nutzer Nr="13" Aktiv="False" Vorname="dieter" Nachname="wurz" Email="dieter.wurz@trol.de" />
+</FE-Nutzer>

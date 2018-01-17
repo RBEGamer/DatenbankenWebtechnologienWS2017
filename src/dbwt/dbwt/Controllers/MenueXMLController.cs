@@ -20,31 +20,8 @@ namespace dbwt.Controllers
             MenuList men = xml.getMenuList();
             MenuList res = new MenuList();
 
-
-
-
-
-
-            /*Auslesen des XML und Speichern in einer Liste mit Menü Objekten*/
-
-            //foreach (var prod in men.Produkte )
-            // {
-            //     Produkt newProdukt = new Produkt();
-            //     newProdukt.pid = prod.ID;
-            //     ret.Add(newProdukt);
-            // }
-
             try
             {  
-
-
-
-
-
-
-
-           
-
 
                 MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhabe
                 con1.Open();
@@ -132,21 +109,14 @@ namespace dbwt.Controllers
             {
                 ViewData["img_path"] = m.Image;
             }
-
-
             String tbl_string = "<table width='100%'><tr><th>TYP</th><th>Mahltzeit</th><th>Preis</th></tr>";
-
-
             try
             {
-
-            
 
             for (int i = 0; i < m.Produkte.Count(); i++)
             {
 
                 String preis = "-- bitte erfragen --";
-
 
                 if (!String.IsNullOrEmpty(HttpContext.Session.Get<String>("role")) && HttpContext.Session.Get<String>("role") == "Student")
                 {
@@ -161,8 +131,6 @@ namespace dbwt.Controllers
                 {
                     preis = m.Produkte[i].preis.Gastbeitrag.ToString() + "€";
                 }
-
-
                 tbl_string += "<tr><td>" + m.Produkte[i].Typ.ToString() + "</td><td><p><b>" + m.Produkte[i].Name.ToString() + "</b></p><br><p>" + m.Produkte[i].Beschreibung.ToString() + "</p></td><td>" + preis + "</td></tr>";
 
             }
@@ -176,10 +144,6 @@ namespace dbwt.Controllers
 
             tbl_string += "</table>";
             ViewData["table"] = tbl_string;
-
-
-
-
             return View();
         }
     }

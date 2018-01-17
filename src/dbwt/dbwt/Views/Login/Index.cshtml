@@ -11,12 +11,12 @@
 @{
 
     ViewData["Title"] = "LOGIN";
-      if (ViewData["admin"] != null && (bool)ViewData["admin"])
-    {
-    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
-  
-   }
 
+    if (ViewData["admin"] != null && (bool)ViewData["admin"])
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    }
 
 
 
@@ -99,11 +99,7 @@
         <span>Du warst das letzte mal am @ViewData["lastlogin"] angemeldet.</span>
 
 
-        if (!String.IsNullOrEmpty((String)ViewData["table"]))
-        {
-             @Html.Raw(ViewData["table"]);
-        }
-
+   
 
 
        

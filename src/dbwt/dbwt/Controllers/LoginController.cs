@@ -53,14 +53,14 @@ namespace dbwt.Controllers
 
 
                     HttpContext.Session.Set<bool>("admin", (bool)r["admin"]);
-                    HttpContext.Session.Set<bool>("verified", (bool)r["verified"]);
+                    HttpContext.Session.Set<bool>("Aktiv", (bool)r["Aktiv"]);
                     is_admin = (bool)r["admin"];
                     ViewData["admin"] = (bool)r["admin"];
 
 
 
 
-                    if (!(bool)r["verified"])
+                    if (!(bool)r["Aktiv"])
                     {
                         ViewData["state"] = 4;
                     }
@@ -79,32 +79,8 @@ namespace dbwt.Controllers
                 //LOAD ADMIN TABLE
                 if (is_admin)
                 {
-                    string tout1 = "";
-                    string tout2 = "";
-              
-                    //LIST NOT VERFIFIED
-                     tout1 += "<h2>Letzte Registrierung</h2><br><table><tr><th>Zeitpunkt</th><th> Loginname (Email) </th><th> ACTION </th></tr>";
-                    tout1 += "<h2>Letzte Anmeldungen</h2><br><table><tr><th>Zeitpunkt</th><th> Loginname (Email) </th><th> ACTION </th></tr>";
-                    cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE 1";
-                    r = cmd.ExecuteReader();
-                    while (r.Read())
-                    {
-                        if((bool)r["verified"] == false)
-                        {
-                            tout1 += "<tr><td>" + r["Anlegedatum"].ToString() + "</td><td>" + r["Loginname"].ToString() + " (" + r["Email"].ToString() + ") </td><td><form method='post' action='/Login'><input type='hidden' name='userid' value='" + r["Nr"].ToString() + "' /><input type='hidden' value='verify'/><input type='submit' value='VERIFIY USER' /></form></td></tr>";
-                        }
-                        else
-                        {
-                            tout2 += "<tr><td>" + r["LetzterLogin"].ToString() + "</td><td>" + r["Loginname"].ToString() + " (" + r["Email"].ToString() + ") </td><td><form method='post' action='/Login'><input type='hidden' name='userid' value='" + r["Nr"].ToString() + "' /><input type='hidden' value='disbale'/><input type='submit' value='DISABLE USER' /></form></td></tr>";
-                        }
-                       
-                    }
 
-
-
-                    tout1 += "</table>";
-                    tout2 += "</table>";
-                    ViewData["table"] = tout2 + tout1;
+                 //   return RedirectToAction("Index", "AdminPanel", new { bigpicture = 1 });
                 }
 
 
@@ -220,7 +196,7 @@ namespace dbwt.Controllers
                             HttpContext.Session.Set<String>("role", role);
 
                             HttpContext.Session.Set<bool>("admin", false);
-                            HttpContext.Session.Set<bool>("verified",false);
+                            HttpContext.Session.Set<bool>("Aktiv",false);
                             //-------------------------------------------------------------------------------------------------------------------------------------------------
 
                             bool is_admin = false;
@@ -249,7 +225,7 @@ namespace dbwt.Controllers
 
 
                                     HttpContext.Session.Set<bool>("admin", (bool)r["admin"]);
-                                    HttpContext.Session.Set<bool>("verified", (bool)r["verified"]);
+                                    HttpContext.Session.Set<bool>("Aktiv", (bool)r["Aktiv"]);
                                     is_admin = (bool)r["admin"];
                                     ViewData["admin"] = (bool)r["admin"];
 
@@ -257,7 +233,7 @@ namespace dbwt.Controllers
 
 
 
-                                    if (!(bool)r["verified"])
+                                    if (!(bool)r["Aktiv"])
                                     {
                                         ViewData["state"] = 4;
                                     }
@@ -275,41 +251,43 @@ namespace dbwt.Controllers
                                 con1.Open();
                                 //LOAD ADMIN TABLE
                                 ViewData["table"] = "";
+                                con1.Close();
                                 if (is_admin)
                                 {
-                                    string tout1 = "";
-                                    string tout2 = "";
+                                    //string tout1 = "";
+                                    //string tout2 = "";
 
-                                    //LIST NOT VERFIFIED
-                                    tout1 += "<h2>Letzte Registrierung</h2><br><table><tr><th>Zeitpunkt</th><th> Loginname (Email) </th><th> ACTION </th></tr>";
-                                    tout2 += "<h2>Letzte Anmeldungen</h2><br><table><tr><th>Zeitpunkt</th><th> Loginname (Email) </th><th> ACTION </th></tr>";
-                                    cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE 1";
-                                    r = cmd.ExecuteReader();
-                                    while (r.Read())
-                                    {
-                                        if ((bool)r["verified"] == false)
-                                        {
-                                            tout1 += "<tr><td>" + r["Anlegedatum"].ToString() + "</td><td>" + r["Loginname"].ToString() + " (" + r["Email"].ToString() + ") </td><td><form method='post' action='/Login'><input type='hidden' name='userid' value='" + r["Nr"].ToString() + "' /><input type='hidden' value='verify'/><input type='submit' value='VERIFIY USER' /></form></td></tr>";
-                                        }
-                                        else
-                                        {
-                                            tout2 += "<tr><td>" + r["LetzterLogin"].ToString() + "</td><td>" + r["Loginname"].ToString() + " (" + r["Email"].ToString() + ") </td><td><form method='post' action='/Login'><input type='hidden' name='userid' value='" + r["Nr"].ToString() + "' /><input type='hidden' value='disbale'/><input type='submit' value='DISABLE USER' /></form></td></tr>";
-                                        }
+                                    ////LIST NOT VERFIFIED
+                                    //tout1 += "<h2>Letzte Registrierung</h2><br><table><tr><th>Zeitpunkt</th><th> Loginname (Email) </th><th> ACTION </th></tr>";
+                                    //tout2 += "<h2>Letzte Anmeldungen</h2><br><table><tr><th>Zeitpunkt</th><th> Loginname (Email) </th><th> ACTION </th></tr>";
+                                    //cmd.CommandText = "SELECT * FROM `FE-Nutzer` WHERE 1";
+                                    //r = cmd.ExecuteReader();
+                                    //while (r.Read())
+                                    //{
+                                    //    if ((bool)r["verified"] == false)
+                                    //    {
+                                    //        tout1 += "<tr><td>" + r["Anlegedatum"].ToString() + "</td><td>" + r["Loginname"].ToString() + " (" + r["Email"].ToString() + ") </td><td><form method='post' action='/Login'><input type='hidden' name='userid' value='" + r["Nr"].ToString() + "' /><input type='hidden' value='verify'/><input type='submit' value='VERIFIY USER' /></form></td></tr>";
+                                    //    }
+                                    //    else
+                                    //    {
+                                    //        tout2 += "<tr><td>" + r["LetzterLogin"].ToString() + "</td><td>" + r["Loginname"].ToString() + " (" + r["Email"].ToString() + ") </td><td><form method='post' action='/Login'><input type='hidden' name='userid' value='" + r["Nr"].ToString() + "' /><input type='hidden' value='disbale'/><input type='submit' value='DISABLE USER' /></form></td></tr>";
+                                    //    }
 
-                                    }
+                                    //}
 
 
 
-                                    tout1 += "</table>";
-                                    tout2 += "</table>";
-                                    ViewData["table"] = tout2 + tout1;
+                                    //tout1 += "</table>";
+                                    //tout2 += "</table>";
+                                    //ViewData["table"] = tout2 + tout1;
+                                    return RedirectToAction("Index", "AdminPanel", new { bigpicture = 1 });
                                 }
 
 
 
 
 
-                                con1.Close();
+                              
 
 
 

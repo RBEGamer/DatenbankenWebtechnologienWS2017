@@ -9,11 +9,20 @@
 @using Microsoft.AspNetCore.Session
 @using Microsoft.AspNetCore.Builder
 
+@model dbwt.Models.user_table_info
+@{
+
+    if (ViewData["admin"] != null && (bool)ViewData["admin"])
+    {
+        Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+
+    }
+}
 
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h1 class="text-center">Details für "@ViewData["Titel"]"</h1>
+            <h1 class="text-center">ADMIN PANEL</h1>
         </div>
     </div>
 
@@ -22,6 +31,32 @@
         <div class="col-md-12">
 
 
+
+
+
+</div>
+
+
+
+
+
+
+@Html.Partial("_RegTableLogin", Model.list_anmeldung)
+
+
+
+@Html.Partial("_RegTableReg", Model.list_registrierung)
+
+
+
+
+
+
+
+
+
+
+         
         </div>
     </div>
 
