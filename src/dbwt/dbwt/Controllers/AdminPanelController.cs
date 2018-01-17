@@ -79,38 +79,52 @@ namespace dbwt.Controllers
             {
                 if (action != null && action == "enable" && HttpContext.Session.Get<bool>("admin"))
                 {
-                    MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
-                    con.Open();
-                    MySqlCommand cmd;
-                    cmd = con.CreateCommand();
-                    cmd.CommandText = "UPDATE `FE-Nutzer` SET `Aktiv`='1' WHERE `Nr` = '" + id + "'";
-                    MySqlDataReader r = cmd.ExecuteReader();
-                    while (r.Read())
+                    try
+                    {
+                        MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
+                        con.Open();
+                        MySqlCommand cmd;
+                        cmd = con.CreateCommand();
+                        cmd.CommandText = "UPDATE `FE-Nutzer` SET `Aktiv`='1' WHERE `Nr` = '" + id + "'";
+                        MySqlDataReader r = cmd.ExecuteReader();
+                        while (r.Read())
+                        {
+
+                        }
+                        con.Close();
+                    }
+                    catch (Exception ex)
                     {
 
                     }
 
 
 
-                    con.Close();
+
+                   
                 }
 
                 if (action != null && action == "disbale" && HttpContext.Session.Get<bool>("admin"))
                 {
-                    MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
-                    con.Open();
-                    MySqlCommand cmd;
-                    cmd = con.CreateCommand();
-                    cmd.CommandText = "UPDATE `FE-Nutzer` SET `Aktiv`='0' WHERE `Nr` = '" + id + "'";
-                    MySqlDataReader r = cmd.ExecuteReader();
-                    while (r.Read())
+                    try
+                    {
+                        MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
+                        con.Open();
+                        MySqlCommand cmd;
+                        cmd = con.CreateCommand();
+                        cmd.CommandText = "UPDATE `FE-Nutzer` SET `Aktiv`='0' WHERE `Nr` = '" + id + "'";
+                        MySqlDataReader r = cmd.ExecuteReader();
+                        while (r.Read())
+                        {
+
+                        }
+                        con.Close();
+                    }
+                    catch (Exception ex)
                     {
 
                     }
-
-
-
-                    con.Close();
+                 
                 }
 
 

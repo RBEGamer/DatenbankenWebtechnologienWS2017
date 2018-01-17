@@ -108,37 +108,37 @@ namespace dbwt.Controllers
 
             if(action != null && action == "verify" && HttpContext.Session.Get<bool>("admin"))
             {
-                MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
-                con.Open();
-                MySqlCommand cmd;
-                cmd = con.CreateCommand();
-                cmd.CommandText = "UPDATE `FE-Nutzer` SET `verified`='1' WHERE `Nr` = '"+ userid + "'";
-                MySqlDataReader r = cmd.ExecuteReader();
-                while(r.Read()){
+                //MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
+                //con.Open();
+                //MySqlCommand cmd;
+                //cmd = con.CreateCommand();
+                //cmd.CommandText = "UPDATE `FE-Nutzer` SET `verified`='1' WHERE `Nr` = '"+ userid + "'";
+                //MySqlDataReader r = cmd.ExecuteReader();
+                //while(r.Read()){
 
-                }
+                //}
 
 
 
-                    con.Close();
+                    //con.Close();
             }
 
             if (action != null && action == "disbale" && HttpContext.Session.Get<bool>("admin"))
             {
-                MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
-                con.Open();
-                MySqlCommand cmd;
-                cmd = con.CreateCommand();
-                cmd.CommandText = "UPDATE `FE-Nutzer` SET `verified`='0' WHERE `Nr` = '" + userid + "'";
-                MySqlDataReader r = cmd.ExecuteReader();
-                while (r.Read())
-                {
+                //MySqlConnection con = new MySqlConnection(DB_ACCESS.Instance.get_conn_string());
+                //con.Open();
+                //MySqlCommand cmd;
+                //cmd = con.CreateCommand();
+                //cmd.CommandText = "UPDATE `FE-Nutzer` SET `verified`='0' WHERE `Nr` = '" + userid + "'";
+                //MySqlDataReader r = cmd.ExecuteReader();
+                //while (r.Read())
+                //{
 
-                }
+                //}
 
 
 
-                con.Close();
+                //con.Close();
             }
 
 

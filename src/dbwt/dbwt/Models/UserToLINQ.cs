@@ -24,12 +24,6 @@ namespace dbwt.Models
             {
 
 
-
-
-
-         
-
-
             MySqlConnection con1 = new MySqlConnection(DB_ACCESS.Instance.get_conn_string()); // lässt sich per using(){} noch besser handhabe
             con1.Open();
             MySqlCommand cmd;

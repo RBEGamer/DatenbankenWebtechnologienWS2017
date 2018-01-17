@@ -1,4 +1,5 @@
-﻿@{
+﻿@model dbwt.Models.RegistrationData
+@{
     ViewData["Title"] = "Index";
 }
 
@@ -7,7 +8,7 @@
 <div id="mf">
 
     <fieldset>
-        <input type="radio" id="mc" name="regtype" value="0" onchange="load_form(0)" checked>
+        <input type="radio" id="mc" name="regtype" value="0" onchange="load_form(0)" checked />
         <label for="mc"> Student</label>
         <input type="radio" id="vi" name="regtype" value="1" onchange="load_form(1)">
         <label for="vi"> Mitarbeiter</label>

@@ -13,19 +13,22 @@ namespace dbwt.Controllers
 {
     public class RegisterController : Controller
     {
+        
         // GET: /<controller>/
         public IActionResult Index()
         {
+            RegistrationData regdata = new RegistrationData();
             ViewData["imv_email"] = false;
             ViewData["imv_user"] = false;
             ViewData["req_ok"] = false;
-            return View();
+            return View(regdata);
         }
 
 
         [HttpGet]
         public ActionResult Index(String d)
         {
+            RegistrationData regdata = new RegistrationData();
             if (!String.IsNullOrEmpty(d)) {
             ViewData["req_ok"] = false;
             ViewData["loginname"] = "testuser";
@@ -45,7 +48,7 @@ namespace dbwt.Controllers
                 ViewData["ablauf"] = "2019-01-23";
             }
 
-            return View();
+            return View(regdata);
         }
 
 
@@ -54,7 +57,7 @@ namespace dbwt.Controllers
         public ActionResult Index(String loginname,String vorname, String nachname, String email, String password, String password_wdh, String role, String matnr, String studgang, String tel, String buro, String mannr, String grund, String ablauf)
         {
 
-
+            RegistrationData regdata = new RegistrationData();
 
             ViewData["req_ok"] = false;
             ViewData["loginname"] = loginname;
@@ -199,7 +202,7 @@ namespace dbwt.Controllers
             con.Close();
 
             ViewData["req_ok"] = true;
-            return View();
+            return View(regdata);
         }
 
 
